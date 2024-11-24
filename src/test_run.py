@@ -1,5 +1,5 @@
 import tkinter as tk
-from character_classes import parental_unit, baby
+from src.character_classes import parental_unit, baby
 import random
 from tkinter import messagebox
 from tkinter import ttk
