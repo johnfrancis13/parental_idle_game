@@ -1,5 +1,5 @@
 import tkinter as tk
-from src.character_classes import parental_unit, baby
+from character_classes import parental_unit, baby
 import random
 from tkinter import messagebox
 from tkinter import ttk
@@ -177,6 +177,10 @@ class TurnTrackerApp:
         
     def end_game(self): 
         messagebox.showinfo("Game Over", f"Your child {self.child.name} died after {self.child.age_days} days. Better luck next time!") 
+        self.root.quit() # Close the game window
+
+    def end_game_victory(self): 
+        messagebox.showinfo("Game Over", f"Your child {self.child.name} turned 18 and is ready to leave the house. Better luck next time!") 
         self.root.quit() # Close the game window
     
     def increment_turn(self):
