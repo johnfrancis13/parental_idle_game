@@ -248,57 +248,93 @@ class baby():
     # check attributes and inclinations
     def update_inclinations(self):
         # check Happiness
-        if self.needs["Happiness"]>40:
-            self.natural_inclinations.append(random.choices(["Emotive","Active","Curious","Calm","Sociable","Playful"], k=1)[0])
-            self.natural_inclinations = [item for item in self.natural_inclinations if item not in  ["Detached","Passive","Uninterested","Anxious","Unsociable","Serious"]]
+        if self.needs["Happiness"]>50:
+            self.natural_inclinations.append(random.choices(["Emotive","Active","Curious","Calm","Sociable","Playful","Joyful","Alert","Giggly"], k=1)[0])
+            self.natural_inclinations = [item for item in self.natural_inclinations if item not in  ["Detached","Passive","Uninterested","Anxious","Unsociable","Serious","Fussy","Irritable","Distressed"]]
             self.natural_inclinations = list(set(self.natural_inclinations))
-            if self.needs["Happiness"]>80:
-                self.natural_inclinations = list(set(self.natural_inclinations))[:5]
-            elif self.needs["Happiness"]>80:
+            if self.needs["Happiness"]>90:
                 self.natural_inclinations = list(set(self.natural_inclinations))[:4]
             elif self.needs["Happiness"]>80:
                 self.natural_inclinations = list(set(self.natural_inclinations))[:3]
-
+            elif self.needs["Happiness"]>70:
+                self.natural_inclinations = list(set(self.natural_inclinations))[:2]
+            elif self.needs["Happiness"]>50:
+                self.natural_inclinations = list(set(self.natural_inclinations))[:1]
         else:
-            self.natural_inclinations = [item for item in self.natural_inclinations if item not in  ["Emotive","Active","Curious","Calm","Sociable","Playful"]]
-            self.natural_inclinations.append(random.choices(["Detached","Passive","Uninterested","Anxious","Unsociable","Serious"], k=1)[0])
+            self.natural_inclinations = [item for item in self.natural_inclinations if item not in  ["Emotive","Active","Curious","Calm","Sociable","Playful","Joyful","Alert","Giggly"]]
+            self.natural_inclinations.append(random.choices(["Detached","Passive","Uninterested","Anxious","Unsociable","Serious","Fussy","Irritable","Distressed"], k=1)[0])
             self.natural_inclinations = list(set(self.natural_inclinations))
-            if self.needs["Happiness"]>30:
-                self.natural_inclinations = list(set(self.natural_inclinations))[:3]
-            if self.needs["Happiness"]>20:
+            if self.needs["Happiness"]<10:
                 self.natural_inclinations = list(set(self.natural_inclinations))[:4]
-            if self.needs["Happiness"]>10:
-                self.natural_inclinations = list(set(self.natural_inclinations))[:5]
-            if self.needs["Happiness"]>0:
-                self.natural_inclinations = list(set(self.natural_inclinations))[:6]
+            elif self.needs["Happiness"]<20:
+                self.natural_inclinations = list(set(self.natural_inclinations))[:3]
+            elif self.needs["Happiness"]<30:
+                self.natural_inclinations = list(set(self.natural_inclinations))[:2]
+            elif self.needs["Happiness"]<=50:
+                self.natural_inclinations = list(set(self.natural_inclinations))[:1]
 
         # check Hunger
-        if self.needs["Hunger"]<20:
+        if self.needs["Hunger"]<25:
             self.natural_inclinations.append("Hungry")
             self.natural_inclinations = list(set(self.natural_inclinations))
         else:
             self.natural_inclinations = [item for item in self.natural_inclinations if item != "Hungry"]
         
         # check Energy
-        if self.needs["Energy"]<20:
+        if self.needs["Energy"]<25:
             self.natural_inclinations.append("Sleepy")
             self.natural_inclinations = list(set(self.natural_inclinations))
         else:
             self.natural_inclinations = [item for item in self.natural_inclinations if item != "Sleepy"]
 
         # check Hygiene
-        if self.needs["Hygiene"]<20:
+        if self.needs["Hygiene"]<25:
             self.natural_inclinations.append("Dirty")
             self.natural_inclinations = list(set(self.natural_inclinations))
         else:
             self.natural_inclinations = [item for item in self.natural_inclinations if item != "Dirty"]
         
         # check Health
-        if self.needs["Health"]<20:
+        if 0 < self.needs["Health"] < 20:
+            self.needs["Current Physical State"] = "Critically ill" 
+        elif 20 <= self.needs["Health"] < 40:
+            self.needs["Current Physical State"] = "Sickly"
+        elif 40 <= self.needs["Health"] < 60:
+            self.needs["Current Physical State"] = "Mediocre"
+        elif 60 <= self.needs["Health"] < 80:
+            self.needs["Current Physical State"] = "Mostly Healthy"
+        elif 80 <= self.needs["Health"] < 100:
+            self.needs["Current Physical State"] = "Very Healthy"
+        elif self.needs["Health"] == 100:
+            self.needs["Current Physical State"] = "Optimally Fit"              
+
+        # check mental
+        if self.needs["Love for Parent"] == 0:
+            self.needs["Current Mental State"] = "Unhinged" 
+        if 0 < self.needs["Love for Parent"] < 20:
+            self.needs["Current Mental State"] = "Distressed" 
+        elif 20 <= self.needs["Love for Parent"] < 40:
+            self.needs["Current Mental State"] = "Struggling"
+        elif 40 <= self.needs["Love for Parent"] < 60:
+            self.needs["Current Mental State"] = "Indifferent"
+        elif 60 <= self.needs["Love for Parent"] < 80:
+            self.needs["Current Mental State"] = "Content"
+        elif 80 <= self.needs["Love for Parent"] < 100:
+            self.needs["Current Mental State"] = "Thriving"
+        elif self.needs["Love for Parent"] == 100:
+            self.needs["Current Mental State"] = "Joyous" 
+
+        if self.needs["Health"]<50:
             self.natural_inclinations.append("Sickly")
             self.natural_inclinations = list(set(self.natural_inclinations))
         else:
             self.natural_inclinations = [item for item in self.natural_inclinations if item != "Sickly"]
+
+        if self.needs["Love for Parent"]<50:
+            self.natural_inclinations.append("Struggling")
+            self.natural_inclinations = list(set(self.natural_inclinations))
+        else:
+            self.natural_inclinations = [item for item in self.natural_inclinations if item != "Struggling"]
 
         
 
@@ -464,9 +500,9 @@ class baby():
 
     def current_inclination_factor(self):
 
-        negative_factors = len([a for a in self.natural_inclinations if a in ["Detached","Passive","Uninterested","Anxious","Unsociable","Serious","Hungry","Sleepy","Sickly","Dirty"]])
+        negative_factors = len([a for a in self.natural_inclinations if a in ["Detached","Passive","Uninterested","Anxious","Unsociable","Serious","Hungry","Sleepy","Sickly","Dirty","Struggling"]])
         positive_factors = len([a for a in self.natural_inclinations if a in ["Emotive","Active","Curious","Calm","Sociable","Playful"]])
-        happiness = 1 if self.needs["Happiness"]>50 else -1
+        happiness = 1 if self.needs["Happiness"]>=50 else -1
         i_f = positive_factors - negative_factors + happiness
 
         return(i_f)
