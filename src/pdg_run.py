@@ -3,28 +3,44 @@ from character_classes import parental_unit, baby
 import random
 from tkinter import messagebox
 from tkinter import ttk
+from tkinter import PhotoImage
 
 class TurnTrackerApp:
     def __init__(self, root):
         self.root = root
         self.turn_count = 0
         self.name = ""  # Initialize an empty name
-        self.child_gender=random.choice(["boy","girl"]) 
+        self.child_gender=random.choice(["boy","girl"])
+
+        # Configure the style for the ttk.Notebook 
+        style = ttk.Style() 
+        style.theme_use('default') 
+        # Set the background color for the ttk.Notebook 
+        style.configure('TNotebook', background='lightblue1') 
+        style.configure('TNotebook.Tab', background='lightblue1')
+        style.configure('TFrame', background='lightblue1')
+        # Set the background color for the selected tab
+        style.map('TNotebook.Tab', background=[('selected','lightblue')])
+        style.map('TNotebook', background=[('selected','lightblue')])
+        style.map('TFrame', background=[('selected','lightblue')])
 
         # Create widgets
-        self.turn_label = tk.Label(self.root, text="Day: 0")
-        self.start_game_button = tk.Button(self.root, text="Start Game", command=self.increment_turn)
-        self.next_turn_button = tk.Button(self.root, text="Next Day", command=self.increment_turn)
-        self.next_5turn_button = tk.Button(self.root, text="Advance 5 Days", command=lambda: self.multi_increment_turn(5))
-        self.next_10turn_button = tk.Button(self.root, text="Advance 10 Days", command=lambda: self.multi_increment_turn(10))
-        self.name_label = tk.Label(self.root, text="Enter your name:")
-        self.child_label = tk.Label(self.root, text=f"You and your partner have just had your first child, it's a {self.child_gender}! Please give them a name:")
-        self.name_entry = tk.Entry(self.root)  # Add an entry widget for the name
-        self.child_entry = tk.Entry(self.root)  # Add an entry widget for the name
+        self.turn_label = tk.Label(self.root, text="Day: 0",bg="white")
+        self.start_game_button = tk.Button(self.root, text="Start Game", command=self.increment_turn,bg="lightgreen")
+        self.next_turn_button = tk.Button(self.root, text="Next Day", command=self.increment_turn,bg="lightgreen")
+        self.next_5turn_button = tk.Button(self.root, text="Advance 5 Days", command=lambda: self.multi_increment_turn(5),bg="lightgreen")
+        self.next_10turn_button = tk.Button(self.root, text="Advance 10 Days", command=lambda: self.multi_increment_turn(10),bg="lightgreen")
+        self.name_label = tk.Label(self.root, text="Enter your name:",bg="white")
+        self.child_label = tk.Label(self.root, text=f"You and your partner have just had your first child, it's a {self.child_gender}! Please give them a name:",bg="white")
+        self.name_entry = tk.Entry(self.root,bg="white")  # Add an entry widget for the name
+        self.child_entry = tk.Entry(self.root,bg="white")  # Add an entry widget for the name
         self.name_entry.insert(0, "John")
         self.child_entry.insert(0, "GB")
-        self.parent_info = tk.Label(self.root, text="Result will appear here")
-        self.child_info = tk.Label(self.root, text="")
+        self.parent_info = tk.Label(self.root, text="Result will appear here",bg="white")
+        self.child_info = tk.Label(self.root, text="",bg="white")
+
+        self.image = PhotoImage(file="data/assets/newborn_image.png")
+        self.image_label = tk.Label(self.root, image=self.image)
 
         starting_needs_dict = {"Hunger":75, # need food to stay happy/healthy
                       "Hygiene":75, # cleanliness to stay happy/healthy
@@ -39,20 +55,20 @@ class TurnTrackerApp:
         self.needs_labels = {} 
         self.needs_frames = {} 
         self.needs_category_labels = {} 
-        frame = tk.Frame(self.root)
+        frame = tk.Frame(self.root,bg="white")
         frame.grid(pady=5)
         # Create the score boxes with labels
         for i, (category, score) in enumerate(starting_needs_dict.items()): 
             # Create a frame for each score box
-            needs_frame = tk.Frame(frame, bd=2, relief="groove")
+            needs_frame = tk.Frame(frame, bd=2, relief="groove",bg="white")
             needs_frame.grid(row=i//9, column=i%9, padx=2, pady=5)
             self.needs_frames[category] = needs_frame
             # Create a label for the score value
-            needs_label = tk.Label(needs_frame, text=score, font=("Helvetica", 12)) 
+            needs_label = tk.Label(needs_frame, text=score, font=("Helvetica", 12),bg="white") 
             needs_label.grid(row=0, column=0, pady=5) 
             self.needs_labels[category] = needs_label 
             # Create a label for the category 
-            needs_category_label = tk.Label(needs_frame, text=category, font=("Helvetica", 10)) 
+            needs_category_label = tk.Label(needs_frame, text=category, font=("Helvetica", 10),bg="white") 
             needs_category_label.grid(row=1, column=0)
             self.needs_category_labels[category] = needs_category_label 
 
@@ -65,19 +81,19 @@ class TurnTrackerApp:
                 "Physical Development":0}
         # Create a dictionary to hold the labels for dynamic updates 
         self.attributes_labels = {} 
-        frame2 = tk.Frame(self.root)
+        frame2 = tk.Frame(self.root,bg="white")
         frame2.grid(pady=5)
         # Create the score boxes with labels
         for i, (category, score) in enumerate(starting_attributes_dict.items()): 
             # Create a frame for each score box
-            attributes_frame = tk.Frame(frame2, bd=2, relief="groove")
+            attributes_frame = tk.Frame(frame2, bd=2, relief="groove",bg="white")
             attributes_frame.grid(row=i//6, column=i%6, padx=2, pady=5)
             # Create a label for the score value
-            attributes_label = tk.Label(attributes_frame, text=score, font=("Helvetica", 12)) 
+            attributes_label = tk.Label(attributes_frame, text=score, font=("Helvetica", 12),bg="white") 
             attributes_label.grid(row=0, column=0, pady=5) 
             self.attributes_labels[category] = attributes_label 
             # Create a label for the category 
-            attributes_category_label = tk.Label(attributes_frame, text=category, font=("Helvetica", 10)) 
+            attributes_category_label = tk.Label(attributes_frame, text=category, font=("Helvetica", 10),bg="white") 
             attributes_category_label.grid(row=1, column=0)
 
         starting_physical_dict = {
@@ -88,19 +104,19 @@ class TurnTrackerApp:
                 "Height (in)":0}
         # Create a dictionary to hold the labels for dynamic updates 
         self.physical_labels = {} 
-        frame3 = tk.Frame(self.root)
+        frame3 = tk.Frame(self.root,bg="white")
         frame3.grid(pady=5)
         # Create the score boxes with labels
         for i, (category, score) in enumerate(starting_physical_dict.items()): 
             # Create a frame for each score box
-            physical_frame = tk.Frame(frame3, bd=2, relief="groove")
+            physical_frame = tk.Frame(frame3, bd=2, relief="groove",bg="white")
             physical_frame.grid(row=i//6, column=i%6, padx=2, pady=5)
             # Create a label for the score value
-            physical_label = tk.Label(physical_frame, text=score, font=("Helvetica", 12)) 
+            physical_label = tk.Label(physical_frame, text=score, font=("Helvetica", 12),bg="white") 
             physical_label.grid(row=0, column=0, pady=5) 
             self.physical_labels[category] = physical_label 
             # Create a label for the category 
-            physical_category_label = tk.Label(physical_frame, text=category, font=("Helvetica", 10)) 
+            physical_category_label = tk.Label(physical_frame, text=category, font=("Helvetica", 10),bg="white") 
             physical_category_label.grid(row=1, column=0)
 
 
@@ -121,7 +137,7 @@ class TurnTrackerApp:
         def restart(): 
             self.root.destroy() # Destroy the current root window
             main()
-        self.restart_button = tk.Button(self.root, text="Restart", command=restart)
+        self.restart_button = tk.Button(self.root, text="Restart", command=restart,bg="lightblue")
         
         def update_total_points():
             total_points = 48
@@ -150,19 +166,19 @@ class TurnTrackerApp:
         self.spinbox_list = []
         self.spinbox_values = []
         self.spin_labels = [] 
-        frame4 = tk.Frame(self.root)
+        frame4 = tk.Frame(self.root,bg="white")
         frame4.grid(pady=5)
         self.actions = ["Sleep","Feed","Play", "Teach","Clean","Do Nothing","Bonding Time"]
         for i in range(len(self.actions)):
             spinbox_value_i = tk.StringVar()
             spinbox = tk.Spinbox(frame4, from_=0, to=48, command=lambda i=i: on_spinbox_change(i),
-                                 state="readonly", textvariable=spinbox_value_i)
-            label = tk.Label(frame4, text=f"{self.actions[i]}")
+                                 state="readonly", textvariable=spinbox_value_i,bg="white")
+            label = tk.Label(frame4, text=f"{self.actions[i]}",bg="white")
             self.spinbox_list.append(spinbox)
             self.spinbox_values.append(spinbox_value_i)
             self.spin_labels.append(label)
 
-        self.remaining_label = tk.Label(self.root, text="Remaining 30 min time chunks: 0")
+        self.remaining_label = tk.Label(self.root, text="Remaining 30 min time chunks: 0",bg="white")
         
         # grid widgets
         self.child_info.grid(row=4, column=0,pady=3)
@@ -193,6 +209,7 @@ class TurnTrackerApp:
             self.turn_label.grid_forget()
             self.name_entry.grid_forget()
             self.child_label.grid_forget()
+            self.child_info.grid_forget()
             self.child_entry.grid_forget()
             self.start_game_button.grid_forget()
             self.restart_button.grid_forget()
@@ -204,11 +221,14 @@ class TurnTrackerApp:
                 self.spin_labels[i].grid(padx=3,row=8, column=i%7, sticky="n")  
                 self.spinbox_list[i].grid(padx=3,row=9, column=i%7, sticky="s")
 
+            self.child_info.grid()
+            self.image_label.grid()
             self.next_turn_button.grid()
             self.next_5turn_button.grid()
             self.next_10turn_button.grid()
             self.parent_info.grid()
             self.restart_button.grid()
+            
             
 			# Create the parent
             self.parent=parental_unit(self.name)
@@ -231,8 +251,7 @@ class TurnTrackerApp:
         
         if self.turn_count>0:
             self.parent_info.config(text=str(self.parent.examine_self_return()))
-            #self.child_info.config(text=str(self.child.examine_child()))
-            turn_attrib, turn_needs, turn_physical,turn_skills, turn_text  =self.child.examine_child2()
+            turn_attrib, turn_needs, turn_physical,turn_skills, turn_text  =self.child.examine_child()
             print(turn_attrib)
             print(turn_needs)
             
@@ -256,6 +275,11 @@ class TurnTrackerApp:
 
             self.child_info.config(text=str(turn_text))
             #self.turn_label.config(text=f"Day: {self.turn_count}")
+            if self.turn_count==90:
+                # Update the image 
+                self.image = PhotoImage(file="data/assets/infant_image.png")
+                self.image_label.configure(image=self.image)
+                self.image_label.image = self.image # Keep a reference to avoid garbage collection
             
 
         if self.spinbox_values[0].get():
@@ -288,11 +312,16 @@ class TurnTrackerApp:
                 self.needs_category_labels[category].config(bg="white")
             
     def update_skill_trees(self,skills):
+        # Clear existing labels in the frames
+        for frame in self.skill_frames.values(): 
+            for widget in frame.winfo_children(): 
+                widget.destroy()
+
         # Populate frames with skill labels using grid 
         for tree, skill_list in skills.items():
             if len(skill_list)>0:
                 for i, skill in enumerate(reversed(skill_list)):
-                    label = tk.Label(self.skill_frames[tree], text=skill)
+                    label = tk.Label(self.skill_frames[tree], text=skill,bg="lightblue")
                     label.grid(row=i, column=0, pady=2, sticky="w")
 
 
@@ -325,6 +354,7 @@ class TurnTrackerApp:
 
 def main():
     root = tk.Tk()
+    root.configure(bg="white")
     root.title("Parental Idle Game") 
     root.geometry("1000x850")
     app = TurnTrackerApp(root)

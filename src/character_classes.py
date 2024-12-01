@@ -1,5 +1,6 @@
 import random
 import textwrap
+import skill_thresholds
 
 # Definte the Parental Unit class which will hold all of the information about the player (attributes, skills, abilities, relationships, etc.)
 class parental_unit():
@@ -142,45 +143,8 @@ class baby():
             self.needs = self.setup_needs(base=True) 
             self.natural_inclinations = self.setup_natural_inclinations(base=True)   
 
-        self.newborn_skill_thresholds = {"Motor Skills": {20: "Grasping fingers", 
-                                                  50: "Tummy time lifting head",
-                                                  120: "Moving arms and legs",
-                                                  200: "Bringing hands to mouth"},
-                                "Social Skills": {20: "Smiling at faces", 
-                                                  80: "Making eye contact",
-                                                  110: "Reacting to familiar voices",
-                                                  200: "Cooing and babbling"},
-                                "Emotional Skills": { 10: "Showing distress (crying)", 
-                                                     70: "Self-soothing (sucking thumb)",
-                                                  150: "Reacting to comfort (calming down when held)",
-                                                  100: "Expressing joy (smiling)"},
-                                "Communication Skills": { 20: "Cooing sounds", 
-                                                  40: "Different cries for different needs",
-                                                  160: "Responding to sounds",
-                                                  200: "Mimicking sounds" }, 
-                                "Cognitive Skills": { 30: "Tracking objects with eyes", 
-                                                     70: "Recognizing familiar faces",
-                                                  130: "Showing curiosity (staring at new objects)",
-                                                  200: "Reacting to changes in environment (startling)" }, 
-                                "Physical Development": { 80: "Strengthened neck muscles", 
-                                                         180: "Improved coordination of limbs "} }    
-
-
 
     def examine_child(self):
-        wrapped_summary = textwrap.fill(f"{self.name}'s current skills are: {'; '.join([f"{value}" for key, value in {key: ', '.join(self.skills[key]) for key in self.skills if len(self.skills[key]) > 0} .items()]) }.",width=150)
-        return(f"""{self.name} is currently a {self.age_days} day old {self.age} that weighs {round(self.weight,3)} pounds and is {round(self.height,3)} inches tall.
-
-                    {self.name}'s current attributes are: {self.attributes}
-        
-                    {self.name}'s current needs are: {self.needs}
-        
-                    {self.name}'s current inclinations are: {self.natural_inclinations}
-
-                    {wrapped_summary}""")
-
-    def examine_child2(self):
-        #wrapped_summary = textwrap.fill(f"{self.name}'s current skills are: {'; '.join([f"{value}" for key, value in {key: ', '.join(self.skills[key]) for key in self.skills if len(self.skills[key]) > 0} .items()]) }.",width=150)
         return(self.attributes, self.needs, {
                 "Name":self.name,
                 "Age (category)":self.age,
@@ -340,9 +304,19 @@ class baby():
 
     # check attributes for skills breakpoints
     def update_skills(self):
+        # Get the right skill thresholds based on age
+        skill_threshold_dict = {"Newborn":skill_thresholds.newborn_skill_thresholds,
+                                "Infant":skill_thresholds.infant_skill_thresholds,
+                                "Toddler":skill_thresholds.toddler_skill_thresholds,
+                                "Preschooler":skill_thresholds.preschooler_skill_thresholds,
+                                "Adolescent":skill_thresholds.adolescent_skill_thresholds,
+                                "Pre-teen":skill_thresholds.preteen_skill_thresholds,
+                                "Teen":skill_thresholds.teen_skill_thresholds}
+        
+        # Check for added skills
         for attribute, points in self.attributes.items():
-            if attribute in self.newborn_skill_thresholds:
-                for threshold, skill in sorted(self.newborn_skill_thresholds[attribute].items()):
+            if attribute in skill_threshold_dict[self.age]:
+                for threshold, skill in sorted(skill_threshold_dict[self.age][attribute].items()):
                     if points >= threshold and skill not in self.skills[attribute]: 
                         self.skills[attribute].append(skill)
 
