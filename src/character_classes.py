@@ -305,13 +305,13 @@ class baby():
     # check attributes for skills breakpoints
     def update_skills(self):
         # Get the right skill thresholds based on age
-        skill_threshold_dict = {"Newborn":skill_thresholds.newborn_skill_thresholds,
-                                "Infant":skill_thresholds.infant_skill_thresholds,
-                                "Toddler":skill_thresholds.toddler_skill_thresholds,
-                                "Preschooler":skill_thresholds.preschooler_skill_thresholds,
-                                "Adolescent":skill_thresholds.adolescent_skill_thresholds,
-                                "Pre-teen":skill_thresholds.preteen_skill_thresholds,
-                                "Teen":skill_thresholds.teen_skill_thresholds}
+        skill_threshold_dict = {"Newborn":skill_thresholds.skill_thresholds_young,
+                                "Infant":skill_thresholds.skill_thresholds_young,
+                                "Toddler":skill_thresholds.skill_thresholds_young,
+                                "Preschooler":skill_thresholds.skill_thresholds_school,
+                                "Adolescent":skill_thresholds.skill_thresholds_school,
+                                "Pre-teen":skill_thresholds.skill_thresholds_school,
+                                "Teen":skill_thresholds.skill_thresholds_high_school}
         
         # Check for added skills
         for attribute, points in self.attributes.items():
