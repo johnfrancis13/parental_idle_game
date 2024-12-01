@@ -305,13 +305,13 @@ class baby():
     # check attributes for skills breakpoints
     def update_skills(self):
         # Get the right skill thresholds based on age
-        skill_threshold_dict = {"Newborn":skill_thresholds.newborn_skill_thresholds,
-                                "Infant":skill_thresholds.infant_skill_thresholds,
-                                "Toddler":skill_thresholds.toddler_skill_thresholds,
-                                "Preschooler":skill_thresholds.preschooler_skill_thresholds,
-                                "Adolescent":skill_thresholds.adolescent_skill_thresholds,
-                                "Pre-teen":skill_thresholds.preteen_skill_thresholds,
-                                "Teen":skill_thresholds.teen_skill_thresholds}
+        skill_threshold_dict = {"Newborn":skill_thresholds.skill_thresholds_young,
+                                "Infant":skill_thresholds.skill_thresholds_young,
+                                "Toddler":skill_thresholds.skill_thresholds_young,
+                                "Preschooler":skill_thresholds.skill_thresholds_school,
+                                "Adolescent":skill_thresholds.skill_thresholds_school,
+                                "Pre-teen":skill_thresholds.skill_thresholds_school,
+                                "Teen":skill_thresholds.skill_thresholds_high_school}
         
         # Check for added skills
         for attribute, points in self.attributes.items():
@@ -326,9 +326,9 @@ class baby():
         if age=="Newborn":
             # Needs
             self.needs["Hunger"] = self.needs["Hunger"] - self.daily_hunger*2 # require food
-            self.needs["Hygiene"] = self.needs["Hygiene"] - 10 # require cleaning
+            self.needs["Hygiene"] = self.needs["Hygiene"] - 8 # require cleaning
             self.needs["Energy"] = self.needs["Energy"] - self.daily_needed_sleep*2 # require sleep
-            self.needs["Love for Parent"] = self.needs["Love for Parent"] - 2 # require bonding time
+            self.needs["Love for Parent"] = self.needs["Love for Parent"] - 4 # require bonding time
             self.age_days +=1
 
             # Every 5 days randomize
@@ -338,9 +338,10 @@ class baby():
 
         if age=="Infant":
             # Needs
-            self.needs["Hunger"] = self.needs["Hunger"] - 20
-            self.needs["Hygiene"] = self.needs["Hygiene"] - 20
-            self.needs["Energy"] = self.needs["Energy"] - 20
+            self.needs["Hunger"] = self.needs["Hunger"] - self.daily_hunger*2 # require food
+            self.needs["Hygiene"] = self.needs["Hygiene"] - 12
+            self.needs["Energy"] = self.needs["Energy"]  - self.daily_needed_sleep*2 # require sleep
+            self.needs["Love for Parent"] = self.needs["Love for Parent"] - 4 # require bonding time
             self.age_days +=1
 
             # Every 5 days randomize
@@ -350,9 +351,10 @@ class baby():
 
         if age=="Toddler":
             # Needs
-            self.needs["Hunger"] = self.needs["Hunger"] - 20
-            self.needs["Hygiene"] = self.needs["Hygiene"] - 20
-            self.needs["Energy"] = self.needs["Energy"] - 20
+            self.needs["Hunger"] = self.needs["Hunger"] - self.daily_hunger*2 # require food
+            self.needs["Hygiene"] = self.needs["Hygiene"] - 8
+            self.needs["Energy"] = self.needs["Energy"]  - self.daily_needed_sleep*2 # require sleep
+            self.needs["Love for Parent"] = self.needs["Love for Parent"] - 3 # require bonding time
             self.age_days +=1
 
             # Every 5 days randomize
@@ -362,9 +364,10 @@ class baby():
 
         if age=="Preschooler":
             # Needs
-            self.needs["Hunger"] = self.needs["Hunger"] - 20
-            self.needs["Hygiene"] = self.needs["Hygiene"] - 20
-            self.needs["Energy"] = self.needs["Energy"] - 20
+            self.needs["Hunger"] = self.needs["Hunger"] - self.daily_hunger*2 # require food
+            self.needs["Hygiene"] = self.needs["Hygiene"] - 6
+            self.needs["Energy"] = self.needs["Energy"]  - self.daily_needed_sleep*2 # require sleep
+            self.needs["Love for Parent"] = self.needs["Love for Parent"] - 2 # require bonding time
             self.age_days +=1
             # Every 10 days randomize
             if self.age_days>1 and self.age_days%30==0:
@@ -373,9 +376,10 @@ class baby():
         
         if age=="Adolescent":
             # Needs
-            self.needs["Hunger"] = self.needs["Hunger"] - 20
-            self.needs["Hygiene"] = self.needs["Hygiene"] - 20
-            self.needs["Energy"] = self.needs["Energy"] - 20
+            self.needs["Hunger"] = self.needs["Hunger"] - self.daily_hunger*2 # require food
+            self.needs["Hygiene"] = self.needs["Hygiene"] - 4
+            self.needs["Energy"] = self.needs["Energy"]  - self.daily_needed_sleep*2 # require sleep
+            self.needs["Love for Parent"] = self.needs["Love for Parent"] - 1 # require bonding time
             self.age_days +=1
             # Every 10 days randomize
             if self.age_days>1 and self.age_days%90==0:
@@ -384,9 +388,10 @@ class baby():
 
         if age=="Pre-teen":
             # Needs
-            self.needs["Hunger"] = self.needs["Hunger"] - 20
-            self.needs["Hygiene"] = self.needs["Hygiene"] - 20
-            self.needs["Energy"] = self.needs["Energy"] - 20
+            self.needs["Hunger"] = self.needs["Hunger"] - self.daily_hunger*2 # require food
+            self.needs["Hygiene"] = self.needs["Hygiene"] - 4
+            self.needs["Energy"] = self.needs["Energy"]  - self.daily_needed_sleep*2 # require sleep
+            self.needs["Love for Parent"] = self.needs["Love for Parent"] - .5 # require bonding time
             self.age_days +=1
             # Every 10 days randomize
             if self.age_days>1 and self.age_days%180==0:
@@ -395,9 +400,10 @@ class baby():
 
         if age=="Teen":
             # Needs
-            self.needs["Hunger"] = self.needs["Hunger"] - 20
-            self.needs["Hygiene"] = self.needs["Hygiene"] - 20
-            self.needs["Energy"] = self.needs["Energy"] - 20
+            self.needs["Hunger"] = self.needs["Hunger"] - self.daily_hunger*2 # require food
+            self.needs["Hygiene"] = self.needs["Hygiene"] - 6 # POTENTIALLY adjust this based on their preference for how much they care about appearances
+            self.needs["Energy"] = self.needs["Energy"]  - self.daily_needed_sleep*2 # require sleep
+            self.needs["Love for Parent"] = self.needs["Love for Parent"] - .25 # require bonding time
             self.age_days +=1
             # Every 10 days randomize
             if self.age_days>1 and self.age_days%300==0:
