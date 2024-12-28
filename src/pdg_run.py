@@ -340,7 +340,7 @@ class TurnTrackerApp:
                 action_amount= action_amount-1
 
         # Also do the baby's normal daily update
-        self.child.update_turn(self.child.age)
+        self.child.update_turn()
 
     # Not actually sure i want to do this, maybe have better default values or just keep the last days values - otherwise you are constantly putting in the same info
     def reset_spinbox_values(self):

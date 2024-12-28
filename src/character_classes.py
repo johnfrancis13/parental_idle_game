@@ -1,6 +1,9 @@
 import random
 import textwrap
 import skill_thresholds
+from tkinter import messagebox
+from events import event_class
+
 
 # Definte the Parental Unit class which will hold all of the information about the player (attributes, skills, abilities, relationships, etc.)
 class parental_unit():
@@ -119,7 +122,7 @@ class parental_unit():
 
         return(skills_dict)
 
-class baby():
+class baby(event_class):
     def __init__(self,
                  name,
                  gender):
@@ -355,11 +358,11 @@ class baby():
                 for threshold, skill in sorted(skill_threshold_dict[self.age][attribute].items()):
                     if points >= threshold and skill not in self.skills[attribute]: 
                         self.skills[attribute].append(skill)
-
-
+                        messagebox.showinfo(title="New skill learned!", message=f"{self.name} is now {skill}!")
+     
     # Baseline updates to all features that happens every day
-    def update_turn(self, age):
-        if age=="Newborn":
+    def update_turn(self):
+        if self.age=="Newborn":
             # Needs
             self.needs["Hunger"] = self.needs["Hunger"] - self.daily_hunger*2 # require food
             self.needs["Hygiene"] = self.needs["Hygiene"] - 8 # require cleaning
@@ -367,12 +370,21 @@ class baby():
             self.needs["Love for Parent"] = self.needs["Love for Parent"] - 4 # require bonding time
             self.age_days +=1
 
-            # Every 5 days randomize
-            if self.age_days>1 and self.age_days%5==0:
+            # Every week randomize
+            if self.age_days>1 and self.age_days%7==0:
                 self.daily_needed_sleep = random.choice([14,15,16,17])
                 self.daily_hunger = random.choice([5,6,7,8,9])
-
-        if age=="Infant":
+                random_event_true,random_event_list, random_positive= self.random_event()
+                if random_event_true==1:
+                    for operation, args in random_event_list["event_effects"]:
+                        operation(*args)
+                    if random_positive==1:
+                        messagebox.showinfo(title="Take note!", message=f"{self.name} {random_event_list['event_name']}")
+                    else:
+                        messagebox.showwarning(title="Watch out!", message=f"{self.name} {random_event_list['event_name']}")
+                   
+                   
+        if self.age=="Infant":
             # Needs
             self.needs["Hunger"] = self.needs["Hunger"] - self.daily_hunger*2 # require food
             self.needs["Hygiene"] = self.needs["Hygiene"] - 12
@@ -380,12 +392,12 @@ class baby():
             self.needs["Love for Parent"] = self.needs["Love for Parent"] - 4 # require bonding time
             self.age_days +=1
 
-            # Every 5 days randomize
-            if self.age_days>1 and self.age_days%5==0:
+            # Every week randomize
+            if self.age_days>1 and self.age_days%7==0:
                 self.daily_needed_sleep = random.choice([12,13,14,15,16])
                 self.daily_hunger = random.choice([5,6,7,8,9])
 
-        if age=="Toddler":
+        if self.age=="Toddler":
             # Needs
             self.needs["Hunger"] = self.needs["Hunger"] - self.daily_hunger*2 # require food
             self.needs["Hygiene"] = self.needs["Hygiene"] - 8
@@ -393,56 +405,56 @@ class baby():
             self.needs["Love for Parent"] = self.needs["Love for Parent"] - 3 # require bonding time
             self.age_days +=1
 
-            # Every 5 days randomize
-            if self.age_days>1 and self.age_days%5==0:
+            # Every week randomize
+            if self.age_days>1 and self.age_days%7==0:
                 self.daily_needed_sleep = random.choice([11,12,13,14])
                 self.daily_hunger = random.choice([5,6,7,8,9])
 
-        if age=="Preschooler":
+        if self.age=="Preschooler":
             # Needs
             self.needs["Hunger"] = self.needs["Hunger"] - self.daily_hunger*2 # require food
             self.needs["Hygiene"] = self.needs["Hygiene"] - 6
             self.needs["Energy"] = self.needs["Energy"]  - self.daily_needed_sleep*2 # require sleep
             self.needs["Love for Parent"] = self.needs["Love for Parent"] - 2 # require bonding time
             self.age_days +=1
-            # Every 10 days randomize
-            if self.age_days>1 and self.age_days%30==0:
+            # Every week randomize
+            if self.age_days>1 and self.age_days%7==0:
                 self.daily_needed_sleep = random.choice([10,11,12,13])
                 self.daily_hunger = random.choice([5,6,7,8,9])
         
-        if age=="Adolescent":
+        if self.age=="Adolescent":
             # Needs
             self.needs["Hunger"] = self.needs["Hunger"] - self.daily_hunger*2 # require food
             self.needs["Hygiene"] = self.needs["Hygiene"] - 4
             self.needs["Energy"] = self.needs["Energy"]  - self.daily_needed_sleep*2 # require sleep
             self.needs["Love for Parent"] = self.needs["Love for Parent"] - 1 # require bonding time
             self.age_days +=1
-            # Every 10 days randomize
-            if self.age_days>1 and self.age_days%90==0:
+            # Every week randomize
+            if self.age_days>1 and self.age_days%7==0:
                 self.daily_needed_sleep = random.choice([9,10,11,12])
                 self.daily_hunger = random.choice([5,6,7,8,9])
 
-        if age=="Pre-teen":
+        if self.age=="Pre-teen":
             # Needs
             self.needs["Hunger"] = self.needs["Hunger"] - self.daily_hunger*2 # require food
             self.needs["Hygiene"] = self.needs["Hygiene"] - 4
             self.needs["Energy"] = self.needs["Energy"]  - self.daily_needed_sleep*2 # require sleep
             self.needs["Love for Parent"] = self.needs["Love for Parent"] - .5 # require bonding time
             self.age_days +=1
-            # Every 10 days randomize
-            if self.age_days>1 and self.age_days%180==0:
+            # Every week randomize
+            if self.age_days>1 and self.age_days%7==0:
                 self.daily_needed_sleep = random.choice([8,9,10,11])
                 self.daily_hunger = random.choice([5,6,7,8,9])
 
-        if age=="Teen":
+        if self.age=="Teen":
             # Needs
             self.needs["Hunger"] = self.needs["Hunger"] - self.daily_hunger*2 # require food
             self.needs["Hygiene"] = self.needs["Hygiene"] - 6 # POTENTIALLY adjust this based on their preference for how much they care about appearances
             self.needs["Energy"] = self.needs["Energy"]  - self.daily_needed_sleep*2 # require sleep
             self.needs["Love for Parent"] = self.needs["Love for Parent"] - .25 # require bonding time
             self.age_days +=1
-            # Every 10 days randomize
-            if self.age_days>1 and self.age_days%300==0:
+            # Every week randomize
+            if self.age_days>1 and self.age_days%7==0:
                 self.daily_needed_sleep = random.choice([7,8,9,10,11])
                 self.daily_hunger = random.choice([5,6,7,8,9])
         
