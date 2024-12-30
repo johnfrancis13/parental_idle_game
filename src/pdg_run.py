@@ -4,10 +4,24 @@ import random
 from tkinter import messagebox
 from tkinter import ttk
 from tkinter import PhotoImage
+# class ScrollableFrame(ttk.Frame): 
+#     def __init__(self, container, *args, **kwargs): 
+#         super().__init__(container, *args, **kwargs) 
+#         canvas = tk.Canvas(self) 
+#         scrollbar = ttk.Scrollbar(self, orient="vertical", command=canvas.yview) 
+#         self.scrollable_frame = ttk.Frame(canvas) 
+#         self.scrollable_frame.bind( "<Configure>", 
+#                                    lambda e: canvas.configure( scrollregion=canvas.bbox("all") ) ) 
+#         canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw") 
+#         canvas.configure(yscrollcommand=scrollbar.set) 
+#         canvas.grid(row=0, column=0, sticky="nsew") 
+#         scrollbar.grid(row=0, column=1, sticky="ns") 
+#         self.grid_rowconfigure(0, weight=1) 
+#         self.grid_columnconfigure(0, weight=1)
 
 class TurnTrackerApp:
     def __init__(self, root):
-        self.root = root
+        self.root = root      
         self.turn_count = 0
         self.name = ""  # Initialize an empty name
         self.child_gender=random.choice(["boy","girl"])
@@ -27,21 +41,27 @@ class TurnTrackerApp:
         # Create widgets
         self.turn_label = tk.Label(self.root, text="Day: 0",bg="white")
         self.start_game_button = tk.Button(self.root, text="Start Game", command=self.increment_turn,bg="lightgreen")
-        self.next_turn_button = tk.Button(self.root, text="Next Day", command=self.increment_turn,bg="lightgreen")
-        self.next_5turn_button = tk.Button(self.root, text="Advance 5 Days", command=lambda: self.multi_increment_turn(5),bg="lightgreen")
-        self.next_10turn_button = tk.Button(self.root, text="Advance 10 Days", command=lambda: self.multi_increment_turn(10),bg="lightgreen")
         self.name_label = tk.Label(self.root, text="Enter your name:",bg="white")
         self.child_label = tk.Label(self.root, text=f"You and your partner have just had your first child, it's a {self.child_gender}! Please give them a name:",bg="white")
         self.name_entry = tk.Entry(self.root,bg="white")  # Add an entry widget for the name
         self.child_entry = tk.Entry(self.root,bg="white")  # Add an entry widget for the name
+
+        # Create a StringVar to hold the selected choice 
+        self.parent_income_label = tk.Label(self.root, text=f"Your income determines how challenging it will be to raise your child! Please choose your income:",bg="white")
+        # Define the choices
+        choices = ["Low paying job (Hard)", "Average paying job (Regular)", "High paying job (Easy)"] 
+        # Create the OptionMenu
+        self.option_menu = ttk.Combobox(self.root, values=choices,width = 30)
+        self.option_menu.set("Average paying job (Regular)")
+        
         self.name_entry.insert(0, "John")
         self.child_entry.insert(0, "GB")
         self.parent_info = tk.Label(self.root, text="Result will appear here",bg="white")
         self.child_info = tk.Label(self.root, text="",bg="white")
 
         self.image = PhotoImage(file="data/assets/newborn_image.png")
-        self.image_label = tk.Label(self.root, image=self.image)
-
+        
+                                                                                             
         starting_needs_dict = {"Hunger":75, # need food to stay happy/healthy
                       "Hygiene":75, # cleanliness to stay happy/healthy
                       "Energy":75, # energy to do activities before collapsing
@@ -51,6 +71,7 @@ class TurnTrackerApp:
                       "Fear of Parent":75, #  affects how amenable child is to activities
                       "Current Physical State":"healthy",
                       "Current Mental State":"content"}
+        
         # Create a dictionary to hold the labels for dynamic updates 
         self.needs_labels = {} 
         self.needs_frames = {} 
@@ -168,7 +189,7 @@ class TurnTrackerApp:
         self.spin_labels = [] 
         frame4 = tk.Frame(self.root,bg="white")
         frame4.grid(pady=5)
-        self.actions = ["Sleep","Feed","Play", "Teach","Clean","Do Nothing","Bonding Time"]
+        self.actions = ["Sleep","Feed","Play", "Teach","Clean","Rest","Bonding Time"]
         for i in range(len(self.actions)):
             spinbox_value_i = tk.StringVar()
             spinbox = tk.Spinbox(frame4, from_=0, to=48, command=lambda i=i: on_spinbox_change(i),
@@ -187,9 +208,11 @@ class TurnTrackerApp:
         self.name_entry.grid(row=7, column=0)
         self.child_label.grid(row=8, column=0)
         self.child_entry.grid(row=9, column=0)
+        self.parent_income_label.grid(row=10, column=0)
+        self.option_menu.grid(row=11, column=0)
 
-        self.start_game_button.grid(row=10, column=0)
-        self.restart_button.grid(row=11, column=0)
+        self.start_game_button.grid(row=12, column=0)
+        self.restart_button.grid(row=13, column=0)
         
     def end_game(self): 
         messagebox.showinfo("Game Over", f"Your child {self.child.name} died after {self.child.age_days} days. Better luck next time!") 
@@ -205,12 +228,15 @@ class TurnTrackerApp:
         if self.turn_count==0:
             self.name = self.name_entry.get()
             self.child_name = self.child_entry.get()
+            self.parent_income = self.option_menu.get()
             self.name_label.grid_forget()
             self.turn_label.grid_forget()
             self.name_entry.grid_forget()
             self.child_label.grid_forget()
             self.child_info.grid_forget()
             self.child_entry.grid_forget()
+            self.parent_income_label.grid_forget()
+            self.option_menu.grid_forget()
             self.start_game_button.grid_forget()
             self.restart_button.grid_forget()
             self.remaining_label.grid(row=7, column=0,pady=3)
@@ -222,10 +248,26 @@ class TurnTrackerApp:
                 self.spinbox_list[i].grid(padx=3,row=9, column=i%7, sticky="s")
 
             self.child_info.grid()
-            self.image_label.grid()
-            self.next_turn_button.grid()
-            self.next_5turn_button.grid()
-            self.next_10turn_button.grid()
+
+            frame_image = tk.Frame(self.root,bg="white")
+            frame_image.grid(row=11,pady=5,padx=5)
+            self.image_label = tk.Label(frame_image, image=self.image,bg="white")
+            self.image_label.grid(row=11,column=0%4,rowspan=4,padx=5)
+            self.next_turn_button = tk.Button(frame_image, text="Next Day", command=self.increment_turn,bg="lightgreen")
+            self.next_5turn_button = tk.Button(frame_image, text="Advance 5 Days", command=lambda: self.multi_increment_turn(5),bg="lightgreen")
+            self.next_10turn_button = tk.Button(frame_image, text="Advance 10 Days", command=lambda: self.multi_increment_turn(10),bg="lightgreen")
+            self.next_turn_button.grid(row=11,column=1%4,rowspan=1)
+            self.next_5turn_button.grid(row=12,column=1%4,rowspan=1)
+            self.next_10turn_button.grid(row=13,column=1%4,rowspan=1)
+            # Create a frame for income
+            self.income_frame = tk.Frame(frame_image, bd=2, relief="groove",bg="white")
+            self.income_frame.grid(row=14,column=1)
+            # Create a label for the score value
+            self.current_money = 0
+            self.income_label = tk.Label(self.income_frame, text=f"${self.current_money}", font=("Helvetica", 12),bg="white")
+            self.income_label.grid()
+            self.income_category_label = tk.Label(self.income_frame, text="Current money from "+self.parent_income, font=("Helvetica", 10),bg="white") 
+            self.income_category_label.grid()
             self.parent_info.grid()
             self.restart_button.grid()
             
@@ -258,6 +300,15 @@ class TurnTrackerApp:
             # Update the labels with the new attribs
             for key, value in self.needs_labels.items():
                 self.needs_labels[key].config(text=turn_needs[key])
+
+            # Add Income Money
+            if self.parent_income=="Low paying job (Hard)":
+                self.current_money+=1
+            elif self.parent_income=="Average paying job (Regular)":
+                self.current_money+=2
+            elif self.parent_income=="High paying job (Easy)":
+                self.current_money+=5
+            self.income_label.config(text=f"${self.current_money}") 
 
             # update the frame colors
             self.update_frame_colors()

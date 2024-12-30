@@ -8,6 +8,11 @@ class event_class():
     
     def increase_need(self,need,increase_amount):
         self.needs[need] += increase_amount
+    
+    def growth_adjustment(self,height_adjustment,weight_adjustment):
+        self.height += height_adjustment
+        self.weight += weight_adjustment
+        
 
     # check and choose random event
     def random_event(self):
@@ -23,21 +28,58 @@ class event_class():
                                                               20
                                             ))]},
                                             {"event_name": "slept through the night",
-                                            "event_effects":[(self.increase_need,("Energy",25))]}
+                                            "event_effects":[(self.increase_need,("Energy",25))]},
+                                            {"event_name": "meeting new relatives",
+                                            "event_effects":[(self.increase_need,("Energy",-20)),
+                                                             (self.increase_skill,("Social Skills",15)),
+                                                             (self.increase_skill,("Communication Skills",15))]},
+                                            {"event_name": "first park trip",
+                                            "event_effects":[(self.increase_need,("Energy",-20)),
+                                                             (self.increase_skill,("Motor Skills",15)),
+                                                             (self.increase_skill,("Cognitive Skills",15))]},
+                                            {"event_name": "growth spurt",
+                                            "event_effects":[(self.increase_need,("Energy",-20)),
+                                                             (self.increase_need,("Hunger",-20)),
+                                                             (self.growth_adjustment,(round(random.uniform(0.00325*5, .00525*5),3),
+                                                                                      round(random.uniform(0.04425*5, .0670*5),3)))]},
                                         ],
                                         "Infant": [
-                                            {"event_name": "says first word",
-                                            "event_effects":[]},
-                                            {"event_name": "takes first step",
-                                            "event_effects":[]},
+                                            {"event_name": "made a skill breakthrough",
+                                            "event_effects":[(self.increase_skill,(
+                                                random.choice(["Motor Skills","Social Skills","Emotional Skills",
+                                                              "Communication Skills","Cognitive Skills","Physical Development"]),
+                                                              20
+                                            ))]},
+                                            {"event_name": "growth spurt",
+                                            "event_effects":[(self.increase_need,("Energy",-20)),
+                                                             (self.increase_need,("Hunger",-20)),
+                                                             (self.growth_adjustment,(round(random.uniform(0.00325*5, .00525*5),3),
+                                                                                      round(random.uniform(0.04425*5, .0670*5),3)))]},
+                                            {"event_name": "says a new word",
+                                            "event_effects":[(self.increase_skill,("Communication Skills",20))]},
+                                            {"event_name": "moves in a new way",
+                                            "event_effects":[(self.increase_skill,("Motor Skills",15)),
+                                                             (self.increase_skill,("Physical Development",15))]},
                                             {"event_name": "laughs heartily for the first time",
-                                            "event_effects":[]},
+                                            "event_effects":[(self.increase_skill,("Emotional Skills",15)),
+                                                             (self.increase_skill,("Social Skills",15))]},
                                             {"event_name": "responds to name",
-                                            "event_effects":[]},
+                                            "event_effects":[(self.increase_skill,("Communication Skills",20))]},
                                             {"event_name": "shows interest in toys",
-                                            "event_effects":[]}
+                                            "event_effects":[(self.increase_skill,("Cognitive Skills",20))]}
                                         ],
                                         "Toddler": [
+                                            {"event_name": "made a skill breakthrough",
+                                            "event_effects":[(self.increase_skill,(
+                                                random.choice(["Motor Skills","Social Skills","Emotional Skills",
+                                                              "Communication Skills","Cognitive Skills","Physical Development"]),
+                                                              20
+                                            ))]},
+                                            {"event_name": "growth spurt",
+                                            "event_effects":[(self.increase_need,("Energy",-20)),
+                                                             (self.increase_need,("Hunger",-20)),
+                                                             (self.growth_adjustment,(round(random.uniform(0.00325*5, .00525*5),3),
+                                                                                      round(random.uniform(0.04425*5, .0670*5),3)))]},
                                             {"event_name": "learns to use the potty",
                                             "event_effects":[]},
                                             {"event_name": "draws a picture",
@@ -50,6 +92,17 @@ class event_class():
                                             "event_effects":[]}
                                         ],
                                         "Preschooler": [
+                                            {"event_name": "made a skill breakthrough",
+                                            "event_effects":[(self.increase_skill,(
+                                                random.choice(["Motor Skills","Social Skills","Emotional Skills",
+                                                              "Communication Skills","Cognitive Skills","Physical Development"]),
+                                                              20
+                                            ))]},
+                                            {"event_name": "growth spurt",
+                                            "event_effects":[(self.increase_need,("Energy",-20)),
+                                                             (self.increase_need,("Hunger",-20)),
+                                                             (self.growth_adjustment,(round(random.uniform(0.00325*5, .00525*5),3),
+                                                                                      round(random.uniform(0.04425*5, .0670*5),3)))]},
                                             {"event_name": "learns to ride a bike",
                                             "event_effects":[]},
                                             {"event_name": "wins a small award",
@@ -62,6 +115,17 @@ class event_class():
                                             "event_effects":[]}
                                         ],
                                         "Adolescent": [
+                                            {"event_name": "made a skill breakthrough",
+                                            "event_effects":[(self.increase_skill,(
+                                                random.choice(["Motor Skills","Social Skills","Emotional Skills",
+                                                              "Communication Skills","Cognitive Skills","Physical Development"]),
+                                                              20
+                                            ))]},
+                                            {"event_name": "growth spurt",
+                                            "event_effects":[(self.increase_need,("Energy",-20)),
+                                                             (self.increase_need,("Hunger",-20)),
+                                                             (self.growth_adjustment,(round(random.uniform(0.00325*5, .00525*5),3),
+                                                                                      round(random.uniform(0.04425*5, .0670*5),3)))]},
                                             {"event_name": "joins a sports team",
                                             "event_effects":[]},
                                             {"event_name": "gets a high grade on a test",
@@ -74,6 +138,17 @@ class event_class():
                                             "event_effects":[]}
                                         ],
                                         "Pre-teen": [
+                                            {"event_name": "made a skill breakthrough",
+                                            "event_effects":[(self.increase_skill,(
+                                                random.choice(["Motor Skills","Social Skills","Emotional Skills",
+                                                              "Communication Skills","Cognitive Skills","Physical Development"]),
+                                                              20
+                                            ))]},
+                                            {"event_name": "growth spurt",
+                                            "event_effects":[(self.increase_need,("Energy",-20)),
+                                                             (self.increase_need,("Hunger",-20)),
+                                                             (self.growth_adjustment,(round(random.uniform(0.00325*5, .00525*5),3),
+                                                                                      round(random.uniform(0.04425*5, .0670*5),3)))]},
                                             {"event_name": "gets a part in a school play",
                                             "event_effects":[]},
                                             {"event_name": "wins a science fair",
@@ -86,6 +161,17 @@ class event_class():
                                             "event_effects":[]}
                                         ],
                                         "Teen": [
+                                            {"event_name": "made a skill breakthrough",
+                                            "event_effects":[(self.increase_skill,(
+                                                random.choice(["Motor Skills","Social Skills","Emotional Skills",
+                                                              "Communication Skills","Cognitive Skills","Physical Development"]),
+                                                              20
+                                            ))]},
+                                            {"event_name": "growth spurt",
+                                            "event_effects":[(self.increase_need,("Energy",-20)),
+                                                             (self.increase_need,("Hunger",-20)),
+                                                             (self.growth_adjustment,(round(random.uniform(0.00325*5, .00525*5),3),
+                                                                                      round(random.uniform(0.04425*5, .0670*5),3)))]},
                                             {"event_name": "gets accepted into a dream college",
                                             "event_effects":[]},
                                             {"event_name": "scores the winning point in a game",
@@ -115,17 +201,28 @@ class event_class():
                                         ],
                                         "Infant": [
                                             {"event_name": "catches a cold",
-                                            "event_effects":[]},
+                                            "event_effects":[(self.increase_need,("Health",-25))]},
                                             {"event_name": "wakes up crying at night",
-                                            "event_effects":[]},
+                                            "event_effects":[(self.increase_need,("Energy",-25))]},
                                             {"event_name": "falls while learning to walk",
-                                            "event_effects":[]},
+                                            "event_effects":[(self.increase_need,("Health",-15)),
+                                                             (self.increase_skill,("Motor Skills",-15))]},
                                             {"event_name": "has a fever",
-                                            "event_effects":[]},
+                                            "event_effects":[(self.increase_need,("Health",-25))]},
                                             {"event_name": "is teething and irritable",
-                                            "event_effects":[]}
+                                            "event_effects":[(self.increase_need,("Energy",-25)),
+                                                             (self.increase_need,("Hunger",-25)),]}
                                         ],
                                         "Toddler": [
+                                            {"event_name": "refuses to eat",
+                                            "event_effects":[(self.increase_need,("Energy",-25)),
+                                                             (self.increase_need,("Hunger",-25)),
+                                                             ]},
+                                            {"event_name": "catches a cold",
+                                            "event_effects":[(self.increase_need,("Health",-25))]},
+                                            {"event_name": "gets hurt while playing",
+                                            "event_effects":[(self.increase_need,("Health",-15)),
+                                                             (self.increase_skill,("Motor Skills",-15))]},
                                             {"event_name": "throws a tantrum in public",
                                             "event_effects":[]},
                                             {"event_name": "loses a favorite toy",
@@ -138,6 +235,15 @@ class event_class():
                                             "event_effects":[]}
                                         ],
                                         "Preschooler": [
+                                            {"event_name": "refuses to eat",
+                                            "event_effects":[(self.increase_need,("Energy",-25)),
+                                                             (self.increase_need,("Hunger",-25)),
+                                                             ]},
+                                            {"event_name": "catches a cold",
+                                            "event_effects":[(self.increase_need,("Health",-25))]},
+                                            {"event_name": "gets hurt while playing",
+                                            "event_effects":[(self.increase_need,("Health",-15)),
+                                                             (self.increase_skill,("Motor Skills",-15))]},
                                             {"event_name": "has a nightmare",
                                             "event_effects":[]},
                                             {"event_name": "gets a minor injury",
@@ -150,6 +256,15 @@ class event_class():
                                             "event_effects":[]}
                                         ],
                                         "Adolescent": [
+                                            {"event_name": "refuses to eat",
+                                            "event_effects":[(self.increase_need,("Energy",-25)),
+                                                             (self.increase_need,("Hunger",-25)),
+                                                             ]},
+                                            {"event_name": "catches a cold",
+                                            "event_effects":[(self.increase_need,("Health",-25))]},
+                                            {"event_name": "gets hurt while playing",
+                                            "event_effects":[(self.increase_need,("Health",-15)),
+                                                             (self.increase_skill,("Motor Skills",-15))]},
                                             {"event_name": "struggles with schoolwork",
                                             "event_effects":[]},
                                             {"event_name": "has an argument with a friend",
@@ -162,6 +277,15 @@ class event_class():
                                             "event_effects":[]}
                                         ],
                                         "Pre-teen": [
+                                            {"event_name": "refuses to eat",
+                                            "event_effects":[(self.increase_need,("Energy",-25)),
+                                                             (self.increase_need,("Hunger",-25)),
+                                                             ]},
+                                            {"event_name": "catches a cold",
+                                            "event_effects":[(self.increase_need,("Health",-25))]},
+                                            {"event_name": "gets hurt while playing",
+                                            "event_effects":[(self.increase_need,("Health",-15)),
+                                                             (self.increase_skill,("Motor Skills",-15))]},
                                             {"event_name": "fails a test",
                                             "event_effects":[]},
                                             {"event_name": "experiences bullying",
@@ -174,6 +298,15 @@ class event_class():
                                             "event_effects":[]}
                                         ],
                                         "Teen": [
+                                            {"event_name": "refuses to eat",
+                                            "event_effects":[(self.increase_need,("Energy",-25)),
+                                                             (self.increase_need,("Hunger",-25)),
+                                                             ]},
+                                            {"event_name": "catches a cold",
+                                            "event_effects":[(self.increase_need,("Health",-25))]},
+                                            {"event_name": "gets hurt while playing",
+                                            "event_effects":[(self.increase_need,("Health",-15)),
+                                                             (self.increase_skill,("Motor Skills",-15))]},
                                             {"event_name": "breaks up with a significant other",
                                             "event_effects":[]},
                                             {"event_name": "faces peer pressure",
