@@ -219,9 +219,26 @@ class TurnTrackerApp:
         self.root.quit() # Close the game window
 
     def end_game_victory(self): 
-        messagebox.showinfo("Game Over", f"Your child {self.child.name} turned 18 and is ready to leave the house. Better luck next time!") 
+        messagebox.showinfo("Game Over", f"Your child {self.child.name} turned 18 and is ready to leave the house. Better luck next time!")
+        # Need to add in some stats/ability to reset with some benefits
         self.root.quit() # Close the game window
     
+    def buy_needs(self,need,amount):
+        for ne in need:
+            self.child.needs[ne] += amount
+            self.needs_labels[ne].config(text=self.child.needs[ne])
+        self.current_money += -50
+        self.income_label.config(text=f"${self.current_money}")
+        self.update_buy_button_states()
+
+    def buy_skills(self,skill,amount):
+        for sk in skill:
+            self.child.attributes[sk] += amount
+            self.attributes_labels[sk].config(text=self.child.attributes[sk])
+        self.current_money += -50
+        self.income_label.config(text=f"${self.current_money}") 
+        self.update_buy_button_states()
+
     def increment_turn(self):
 
         # Turn 0 is setup, add an introduction of your child (randomly you and your spouse have just had a boy/girl, what would you like to name it?)
@@ -268,6 +285,22 @@ class TurnTrackerApp:
             self.income_label.grid()
             self.income_category_label = tk.Label(self.income_frame, text="Current money from "+self.parent_income, font=("Helvetica", 10),bg="white") 
             self.income_category_label.grid()
+            
+            # Create buttons to spend money
+            self.buy_nut_supp = tk.Button(frame_image, text="Buy nutrition supplements ($50)", command=lambda: self.buy_needs(["Energy"], 20),bg="lightyellow")
+            self.buy_doc = tk.Button(frame_image, text="See a doctor ($50)", command=lambda: self.buy_needs(["Health"], 20),bg="lightyellow")
+            self.buy_party = tk.Button(frame_image, text="Host a social event ($50)", command=lambda: self.buy_skills(["Social Skills","Communication Skills"], 20),bg="lightyellow")
+            self.buy_toy = tk.Button(frame_image, text="Buy a new toy ($50)", command=lambda: self.buy_needs(["Love for Parent"], 20),bg="lightyellow")
+            self.buy_meal = tk.Button(frame_image, text="Go out to eat ($50)", command=lambda: self.buy_needs(["Hunger"], 20),bg="lightyellow")
+            # add in the buy buttons
+            self.buy_nut_supp.grid(row=11,column=2%4,rowspan=1)
+            self.buy_doc.grid(row=12,column=2%4,rowspan=1) 
+            self.buy_party.grid(row=13,column=2%4,rowspan=1)
+            self.buy_toy.grid(row=11,column=3%4,rowspan=1)
+            self.buy_meal.grid(row=12,column=3%4,rowspan=1)
+            self.update_buy_button_states()
+
+
             self.parent_info.grid()
             self.restart_button.grid()
             
@@ -296,7 +329,6 @@ class TurnTrackerApp:
             turn_attrib, turn_needs, turn_physical,turn_skills, turn_text  =self.child.examine_child()
             print(turn_attrib)
             print(turn_needs)
-            
             # Update the labels with the new attribs
             for key, value in self.needs_labels.items():
                 self.needs_labels[key].config(text=turn_needs[key])
@@ -308,7 +340,9 @@ class TurnTrackerApp:
                 self.current_money+=2
             elif self.parent_income=="High paying job (Easy)":
                 self.current_money+=5
-            self.income_label.config(text=f"${self.current_money}") 
+            self.income_label.config(text=f"${self.current_money}")
+
+            self.update_buy_button_states()
 
             # update the frame colors
             self.update_frame_colors()
@@ -331,7 +365,35 @@ class TurnTrackerApp:
                 self.image = PhotoImage(file="data/assets/infant_image.png")
                 self.image_label.configure(image=self.image)
                 self.image_label.image = self.image # Keep a reference to avoid garbage collection
-            
+            elif self.turn_count==365:
+                # Update the image 
+                self.image = PhotoImage(file="data/assets/toddler_image.png")
+                self.image_label.configure(image=self.image)
+                self.image_label.image = self.image # Keep a reference to avoid garbage collection
+            elif self.turn_count==1095:
+                # Update the image 
+                self.image = PhotoImage(file="data/assets/preschooler_image.png")
+                self.image_label.configure(image=self.image)
+                self.image_label.image = self.image # Keep a reference to avoid garbage collection
+            elif self.turn_count==2190:
+                # Update the image 
+                self.image = PhotoImage(file="data/assets/adolescent_image.png")
+                self.image_label.configure(image=self.image)
+                self.image_label.image = self.image # Keep a reference to avoid garbage collection
+            elif self.turn_count==4015:
+                # Update the image 
+                self.image = PhotoImage(file="data/assets/preteen_image.png")
+                self.image_label.configure(image=self.image)
+                self.image_label.image = self.image # Keep a reference to avoid garbage collection
+            elif self.turn_count==4745:
+                # Update the image 
+                self.image = PhotoImage(file="data/assets/teen_image.png")
+                self.image_label.configure(image=self.image)
+                self.image_label.image = self.image # Keep a reference to avoid garbage collection
+
+            if self.turn_count==6570:
+                self.end_game_victory()
+
 
         if self.spinbox_values[0].get():
             self.turn_count += 1
@@ -339,6 +401,21 @@ class TurnTrackerApp:
     def multi_increment_turn(self,number):
         for _ in range(number):
             self.increment_turn()
+    
+    def update_buy_button_states(self):
+        if self.current_money < 50: 
+            self.buy_nut_supp.config(state="disabled")
+            self.buy_doc.config(state="disabled") 
+            self.buy_party.config(state="disabled")
+            self.buy_toy.config(state="disabled")
+            self.buy_meal.config(state="disabled")
+            
+        else: 
+            self.buy_nut_supp.config(state="normal")
+            self.buy_doc.config(state="normal") 
+            self.buy_party.config(state="normal")
+            self.buy_toy.config(state="normal")
+            self.buy_meal.config(state="normal")
 
     def update_frame_colors(self):
         for category, label in self.needs_labels.items():
