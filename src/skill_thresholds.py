@@ -1,7 +1,7 @@
 # Base skill thresholds
 skill_thresholds_young = {"Motor Skills": {# Newborn
                                           20: "Grasping fingers", 
-                                          50: "Tummy time lifting head",
+                                          50: "Lifting head while on tummy",
                                           120: "Moving arms and legs",
                                           200: "Bringing hands to mouth",
                                           # Infant
@@ -13,10 +13,10 @@ skill_thresholds_young = {"Motor Skills": {# Newborn
                                           800: "Cruising: Walking while holding onto furniture.", 
                                           900: "Pulling Up: Pulling up from sitting to standing position.",
                                           # Toddler
-                                          20: "Grasping fingers", 
-                                          50: "Tummy time lifting head",
-                                          120: "Moving arms and legs",
-                                          200: "Bringing hands to mouth"
+                                          2000: "Grasping fingers", 
+                                          5000: "Tummy time lifting head",
+                                          12000: "Moving arms and legs",
+                                          20000: "Bringing hands to mouth"
                                           },
                         "Social Skills": {# Newborn
                                           20: "Smiling at faces", 
@@ -30,10 +30,10 @@ skill_thresholds_young = {"Motor Skills": {# Newborn
                                           500: "Interactive Play: Engaging in simple games like peek-a-boo.",
                                           700: "Separation Anxiety: Showing distress when separated from parents.",
                                           # Toddler
-                                          20: "Smiling at faces", 
-                                          80: "Making eye contact",
-                                          110: "Reacting to familiar voices",
-                                          200: "Cooing and babbling"
+                                          2000: "Smiling at faces", 
+                                          8000: "Making eye contact",
+                                          11000: "Reacting to familiar voices",
+                                          20000: "Cooing and babbling"
                                           },
                         "Emotional Skills": {# Newborn
                                           10: "Showing distress (crying)", 
@@ -45,14 +45,14 @@ skill_thresholds_young = {"Motor Skills": {# Newborn
                                           400: "Attachment Formation: Developing strong emotional bonds with caregivers.",
                                           500: "Self-Soothing: Starting to calm themselves when upset.",
                                           # Toddler
-                                          10: "Showing distress (crying)", 
-                                          70: "Self-soothing (sucking thumb)",
-                                          150: "Reacting to comfort (calming down when held)",
-                                          100: "Expressing joy (smiling)"
+                                          1000: "Showing distress (crying)", 
+                                          7000: "Self-soothing (sucking thumb)",
+                                          15000: "Reacting to comfort (calming down when held)",
+                                          10000: "Expressing joy (smiling)"
                                                 },
                         "Communication Skills": { # Newborn
-                                          20: "Cooing sounds", 
-                                          40: "Different cries for different needs",
+                                          20: "Cooing to communicate", 
+                                          40: "Crying differently for different needs",
                                           160: "Responding to sounds",
                                           200: "Mimicking sounds",
                                           # Infant
@@ -61,10 +61,10 @@ skill_thresholds_young = {"Motor Skills": {# Newborn
                                           500: "Gesturing: Using hands to communicate, such as waving or pointing.", 
                                           600: "First Words: Saying simple words like 'mama' or 'dada'.",
                                           # Toddler
-                                          20: "Cooing sounds", 
-                                          40: "Different cries for different needs",
-                                          160: "Responding to sounds",
-                                          200: "Mimicking sounds" 
+                                          2000: "Cooing sounds", 
+                                          4000: "Different cries for different needs",
+                                          16000: "Responding to sounds",
+                                          20000: "Mimicking sounds" 
                                           }, 
                         "Cognitive Skills": {# Newborn
                                           30: "Tracking objects with eyes", 
@@ -77,21 +77,21 @@ skill_thresholds_young = {"Motor Skills": {# Newborn
                                           500: "Exploring with Senses: Using sight, touch, taste, smell, and hearing to learn about the world.",
                                           600: "Problem Solving: Simple problem-solving like finding hidden objects.",
                                           # Toddler
-                                          30: "Tracking objects with eyes", 
-                                          70: "Recognizing familiar faces",
-                                          130: "Showing curiosity (staring at new objects)",
-                                          200: "Reacting to changes in environment (startling)"
+                                          3000: "Tracking objects with eyes", 
+                                          7000: "Recognizing familiar faces",
+                                          13000: "Showing curiosity (staring at new objects)",
+                                          20000: "Reacting to changes in environment (startling)"
                                           }, 
                         "Physical Development": {# Newborn
-                                                 80: "Strengthened neck muscles", 
-                                                 180: "Improved coordination of limbs",
+                                                 80: "Displaying strengthened neck muscles", 
+                                                 180: "Showing improved coordination of limbs",
                                                  # Infant
                                                  300: "Teething: Beginning to get their first teeth.",
                                                  400: "Eating Solid Foods: Starting to eat baby-friendly solid foods.",
                                                  500: "Improved Hand-Eye Coordination: Better control over movements to interact with objects.",
                                                  # Toddler
-                                                 80: "Strengthened neck muscles", 
-                                                180: "Improved coordination of limbs"
+                                                 8000: "Strengthened neck muscles", 
+                                                18000: "Improved coordination of limbs"
                                           } }  
 
 

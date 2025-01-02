@@ -1,6 +1,9 @@
 import random
 import textwrap
 import skill_thresholds
+from tkinter import messagebox
+from events import event_class
+
 
 # Definte the Parental Unit class which will hold all of the information about the player (attributes, skills, abilities, relationships, etc.)
 class parental_unit():
@@ -119,7 +122,7 @@ class parental_unit():
 
         return(skills_dict)
 
-class baby():
+class baby(event_class):
     def __init__(self,
                  name,
                  gender):
@@ -355,11 +358,11 @@ class baby():
                 for threshold, skill in sorted(skill_threshold_dict[self.age][attribute].items()):
                     if points >= threshold and skill not in self.skills[attribute]: 
                         self.skills[attribute].append(skill)
-
-
+                        messagebox.showinfo(title="New skill learned!", message=f"{self.name} is now {skill}!")
+     
     # Baseline updates to all features that happens every day
-    def update_turn(self, age):
-        if age=="Newborn":
+    def update_turn(self):
+        if self.age=="Newborn":
             # Needs
             self.needs["Hunger"] = self.needs["Hunger"] - self.daily_hunger*2 # require food
             self.needs["Hygiene"] = self.needs["Hygiene"] - 8 # require cleaning
@@ -367,12 +370,21 @@ class baby():
             self.needs["Love for Parent"] = self.needs["Love for Parent"] - 4 # require bonding time
             self.age_days +=1
 
-            # Every 5 days randomize
-            if self.age_days>1 and self.age_days%5==0:
+            # Every week randomize
+            if self.age_days>1 and self.age_days%7==0:
                 self.daily_needed_sleep = random.choice([14,15,16,17])
                 self.daily_hunger = random.choice([5,6,7,8,9])
-
-        if age=="Infant":
+                random_event_true,random_event_list, random_positive= self.random_event()
+                if random_event_true==1:
+                    for operation, args in random_event_list["event_effects"]:
+                        operation(*args)
+                    if random_positive==1:
+                        messagebox.showinfo(title="Take note!", message=f"{self.name} {random_event_list['event_name']}")
+                    else:
+                        messagebox.showwarning(title="Watch out!", message=f"{self.name} {random_event_list['event_name']}")
+                   
+                   
+        if self.age=="Infant":
             # Needs
             self.needs["Hunger"] = self.needs["Hunger"] - self.daily_hunger*2 # require food
             self.needs["Hygiene"] = self.needs["Hygiene"] - 12
@@ -380,12 +392,20 @@ class baby():
             self.needs["Love for Parent"] = self.needs["Love for Parent"] - 4 # require bonding time
             self.age_days +=1
 
-            # Every 5 days randomize
-            if self.age_days>1 and self.age_days%5==0:
+            # Every week randomize
+            if self.age_days>1 and self.age_days%7==0:
                 self.daily_needed_sleep = random.choice([12,13,14,15,16])
                 self.daily_hunger = random.choice([5,6,7,8,9])
+                random_event_true,random_event_list, random_positive= self.random_event()
+                if random_event_true==1:
+                    for operation, args in random_event_list["event_effects"]:
+                        operation(*args)
+                    if random_positive==1:
+                        messagebox.showinfo(title="Take note!", message=f"{self.name} {random_event_list['event_name']}")
+                    else:
+                        messagebox.showwarning(title="Watch out!", message=f"{self.name} {random_event_list['event_name']}")
 
-        if age=="Toddler":
+        if self.age=="Toddler":
             # Needs
             self.needs["Hunger"] = self.needs["Hunger"] - self.daily_hunger*2 # require food
             self.needs["Hygiene"] = self.needs["Hygiene"] - 8
@@ -393,58 +413,98 @@ class baby():
             self.needs["Love for Parent"] = self.needs["Love for Parent"] - 3 # require bonding time
             self.age_days +=1
 
-            # Every 5 days randomize
-            if self.age_days>1 and self.age_days%5==0:
+            # Every week randomize
+            if self.age_days>1 and self.age_days%7==0:
                 self.daily_needed_sleep = random.choice([11,12,13,14])
                 self.daily_hunger = random.choice([5,6,7,8,9])
+                random_event_true,random_event_list, random_positive= self.random_event()
+                if random_event_true==1:
+                    for operation, args in random_event_list["event_effects"]:
+                        operation(*args)
+                    if random_positive==1:
+                        messagebox.showinfo(title="Take note!", message=f"{self.name} {random_event_list['event_name']}")
+                    else:
+                        messagebox.showwarning(title="Watch out!", message=f"{self.name} {random_event_list['event_name']}")
 
-        if age=="Preschooler":
+        if self.age=="Preschooler":
             # Needs
             self.needs["Hunger"] = self.needs["Hunger"] - self.daily_hunger*2 # require food
             self.needs["Hygiene"] = self.needs["Hygiene"] - 6
             self.needs["Energy"] = self.needs["Energy"]  - self.daily_needed_sleep*2 # require sleep
             self.needs["Love for Parent"] = self.needs["Love for Parent"] - 2 # require bonding time
             self.age_days +=1
-            # Every 10 days randomize
-            if self.age_days>1 and self.age_days%30==0:
+            # Every week randomize
+            if self.age_days>1 and self.age_days%7==0:
                 self.daily_needed_sleep = random.choice([10,11,12,13])
                 self.daily_hunger = random.choice([5,6,7,8,9])
+                random_event_true,random_event_list, random_positive= self.random_event()
+                if random_event_true==1:
+                    for operation, args in random_event_list["event_effects"]:
+                        operation(*args)
+                    if random_positive==1:
+                        messagebox.showinfo(title="Take note!", message=f"{self.name} {random_event_list['event_name']}")
+                    else:
+                        messagebox.showwarning(title="Watch out!", message=f"{self.name} {random_event_list['event_name']}")
         
-        if age=="Adolescent":
+        if self.age=="Adolescent":
             # Needs
             self.needs["Hunger"] = self.needs["Hunger"] - self.daily_hunger*2 # require food
             self.needs["Hygiene"] = self.needs["Hygiene"] - 4
             self.needs["Energy"] = self.needs["Energy"]  - self.daily_needed_sleep*2 # require sleep
             self.needs["Love for Parent"] = self.needs["Love for Parent"] - 1 # require bonding time
             self.age_days +=1
-            # Every 10 days randomize
-            if self.age_days>1 and self.age_days%90==0:
+            # Every week randomize
+            if self.age_days>1 and self.age_days%7==0:
                 self.daily_needed_sleep = random.choice([9,10,11,12])
                 self.daily_hunger = random.choice([5,6,7,8,9])
+                random_event_true,random_event_list, random_positive= self.random_event()
+                if random_event_true==1:
+                    for operation, args in random_event_list["event_effects"]:
+                        operation(*args)
+                    if random_positive==1:
+                        messagebox.showinfo(title="Take note!", message=f"{self.name} {random_event_list['event_name']}")
+                    else:
+                        messagebox.showwarning(title="Watch out!", message=f"{self.name} {random_event_list['event_name']}")
 
-        if age=="Pre-teen":
+        if self.age=="Pre-teen":
             # Needs
             self.needs["Hunger"] = self.needs["Hunger"] - self.daily_hunger*2 # require food
             self.needs["Hygiene"] = self.needs["Hygiene"] - 4
             self.needs["Energy"] = self.needs["Energy"]  - self.daily_needed_sleep*2 # require sleep
             self.needs["Love for Parent"] = self.needs["Love for Parent"] - .5 # require bonding time
             self.age_days +=1
-            # Every 10 days randomize
-            if self.age_days>1 and self.age_days%180==0:
+            # Every week randomize
+            if self.age_days>1 and self.age_days%7==0:
                 self.daily_needed_sleep = random.choice([8,9,10,11])
                 self.daily_hunger = random.choice([5,6,7,8,9])
+                random_event_true,random_event_list, random_positive= self.random_event()
+                if random_event_true==1:
+                    for operation, args in random_event_list["event_effects"]:
+                        operation(*args)
+                    if random_positive==1:
+                        messagebox.showinfo(title="Take note!", message=f"{self.name} {random_event_list['event_name']}")
+                    else:
+                        messagebox.showwarning(title="Watch out!", message=f"{self.name} {random_event_list['event_name']}")
 
-        if age=="Teen":
+        if self.age=="Teen":
             # Needs
             self.needs["Hunger"] = self.needs["Hunger"] - self.daily_hunger*2 # require food
             self.needs["Hygiene"] = self.needs["Hygiene"] - 6 # POTENTIALLY adjust this based on their preference for how much they care about appearances
             self.needs["Energy"] = self.needs["Energy"]  - self.daily_needed_sleep*2 # require sleep
             self.needs["Love for Parent"] = self.needs["Love for Parent"] - .25 # require bonding time
             self.age_days +=1
-            # Every 10 days randomize
-            if self.age_days>1 and self.age_days%300==0:
+            # Every week randomize
+            if self.age_days>1 and self.age_days%7==0:
                 self.daily_needed_sleep = random.choice([7,8,9,10,11])
                 self.daily_hunger = random.choice([5,6,7,8,9])
+                random_event_true,random_event_list, random_positive= self.random_event()
+                if random_event_true==1:
+                    for operation, args in random_event_list["event_effects"]:
+                        operation(*args)
+                    if random_positive==1:
+                        messagebox.showinfo(title="Take note!", message=f"{self.name} {random_event_list['event_name']}")
+                    else:
+                        messagebox.showwarning(title="Watch out!", message=f"{self.name} {random_event_list['event_name']}")
         
         # Check Health/Happiness
         for turn_need in ["Hygiene","Hunger","Energy"]:
@@ -503,6 +563,7 @@ class baby():
         negative_factors = len([a for a in self.natural_inclinations if a in ["Detached","Passive","Uninterested","Anxious","Unsociable","Serious","Hungry","Sleepy","Sickly","Dirty","Struggling"]])
         positive_factors = len([a for a in self.natural_inclinations if a in ["Emotive","Active","Curious","Calm","Sociable","Playful"]])
         happiness = 1 if self.needs["Happiness"]>=50 else -1
+        mental_state = 1 if self.needs["Love for Parent"]>=50 else -1
         i_f = positive_factors - negative_factors + happiness
 
         return(i_f)
@@ -570,97 +631,97 @@ class baby():
     def determine_weight_gain_by_age(self):
         if self.age=="Newborn":
             if self.gender=="boy":
-                return(round(random.uniform(0.04425, 0.0670),3))
+                return round(random.uniform(0.04425, 0.0670),3)
             else:
-                return(round(random.uniform(0.04175, 0.0610),3))
+                return round(random.uniform(0.04175, 0.0610),3)
 
         if self.age=="Infant":
             if self.gender=="boy":
-                return(round(random.uniform(0.025, 0.0485),3))
+                return round(random.uniform(0.025, 0.0485),3)
             else:
-                return(round(random.uniform(0.0225, 0.04585),3))
+                return round(random.uniform(0.0225, 0.04585),3)
 
         if self.age=="Toddler":
             if self.gender=="boy":
-                return(round(random.uniform(0.015625, 0.01925),3))
+                return round(random.uniform(0.015625, 0.01925),3)
             else:
-                return(round(random.uniform(0.015425, 0.01895),3))
+                return round(random.uniform(0.015425, 0.01895),3)
 
         if self.age=="Preschooler":
             if self.gender=="boy":
-                return(round(random.uniform(0.010825, 0.013425),3))
+                return round(random.uniform(0.010825, 0.013425),3)
             else:
-                return(round(random.uniform(0.010525, 0.013225),3))
+                return round(random.uniform(0.010525, 0.013225),3)
             
         if self.age=="Adolescent":
             if self.gender=="boy":
-                return(round(random.uniform(0.013225, 0.021),3))
+                return round(random.uniform(0.013225, 0.021),3)
             else:
-                return(round(random.uniform(0.013025, 0.020),3))
+                return round(random.uniform(0.013025, 0.020),3)
 
         if self.age=="Pre-teen":
             if self.gender=="boy":
-                return(round(random.uniform(0.01675, 0.0325),3))
+                return round(random.uniform(0.01675, 0.0325),3)
             else:
-                return(round(random.uniform(0.01875, 0.0375),3)) # girls outpace boys
+                return round(random.uniform(0.01875, 0.0375),3) # girls outpace boys
 
         if self.age=="Teen":
             if self.gender=="boy":
-                return(round(random.uniform(0.027, 0.0395),3)) # boys outpace girls
+                return round(random.uniform(0.027, 0.0395),3) # boys outpace girls
             else:
-                return(round(random.uniform(0.023, 0.0355),3))
+                return round(random.uniform(0.023, 0.0355),3)
 
     def determine_height_gain_by_age(self): # NOTE: STILL NEED TO ADJUST THIS
         if self.age=="Newborn":
             if self.gender=="boy":
-                return(round(random.uniform(0.04425, 0.0670),3))
+                return(round(random.uniform(0.00325, 0.00525),3))
             else:
-                return(round(random.uniform(0.04175, 0.0610),3))
+                return(round(random.uniform(0.003, 0.005),3))
 
         if self.age=="Infant":
             if self.gender=="boy":
-                return(round(random.uniform(0.025, 0.0485),3))
+                return round(random.uniform(0.00225, 0.00425),3)
             else:
-                return(round(random.uniform(0.0225, 0.04585),3))
+                return round(random.uniform(0.0025, 0.004),3)
 
         if self.age=="Toddler":
             if self.gender=="boy":
-                return(round(random.uniform(0.015625, 0.01925),3))
+                return round(random.uniform(0.00075, 0.00275),3)
             else:
-                return(round(random.uniform(0.015425, 0.01895),3))
+                return round(random.uniform(0.0005, 0.0025),3)
 
         if self.age=="Preschooler":
             if self.gender=="boy":
-                return(round(random.uniform(0.010825, 0.013425),3))
+                return round(random.uniform(0.0042, 0.0092),3)
             else:
-                return(round(random.uniform(0.010525, 0.013225),3))
+                return round(random.uniform(0.004, 0.009),3)
             
         if self.age=="Adolescent":
             if self.gender=="boy":
-                return(round(random.uniform(0.013225, 0.021),3))
+                return round(random.uniform(0.0042, 0.0092),3)
             else:
-                return(round(random.uniform(0.013025, 0.020),3))
+                return round(random.uniform(0.004, 0.009),3)
 
         if self.age=="Pre-teen":
             if self.gender=="boy":
-                return(round(random.uniform(0.01675, 0.0325),3))
+                return round(random.uniform(0.004, 0.0115),3)
             else:
-                return(round(random.uniform(0.01875, 0.0375),3)) # girls outpace boys
+                return round(random.uniform(0.007, 0.013),3) # girls outpace boys
 
         if self.age=="Teen":
             if self.gender=="boy":
-                return(round(random.uniform(0.027, 0.0395),3)) # boys outpace girls
+                return round(random.uniform(0.0055, 0.011),3) # boys outpace girls
             else:
-                return(round(random.uniform(0.023, 0.0355),3))
+                return round(random.uniform(0.004, 0.009),3)
 
     # Function to update attributes, skills, needs, and Height/Weight based on the action of the turn
     def process_action(self, action):
         action_dict = {"Sleep":{"Needs":{"Energy":2},
                         "Attributes":None,
-                        "Size":{"Height":round(random.uniform(0.005, .015),3)}},
+                        "Size":{"Height":self.determine_height_gain_by_age()/self.daily_needed_sleep}},
                "Feed":{"Needs":{"Hunger":2},
                         "Attributes":None,
-                        "Size":{"Weight":round(random.uniform(0.015, .025),3)}},
+                        "Size":{"Weight":self.determine_weight_gain_by_age()/self.daily_hunger}},
                "Play":{"Needs":{"Energy":-4,
                                 "Hygiene":-2},
                         "Attributes": self.develop_skill("Play"),
@@ -669,10 +730,11 @@ class baby():
                         "Attributes":self.develop_skill("Teach"),
                         "Size":None},
                "Clean":{"Needs":{"Hygiene":2,
-                                            "Energy":-2},
+                                 "Energy":-2},
                         "Attributes":None,
                         "Size":None},
-               "Do Nothing":{"Needs":None,
+               "Rest":{"Needs":{"Energy":1,
+                                "Hygiene":1},
                         "Attributes":None,
                         "Size":None},
                "Bonding Time":{"Needs":{"Energy":-2,
