@@ -1,6 +1,6 @@
 import random
 
-# This is a class to hold alln the methods for the random events
+# This is a class to hold all the methods for the random events
 class event_class():
 
     def increase_skill(self,skill,increase_amount):

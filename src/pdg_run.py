@@ -4,20 +4,8 @@ import random
 from tkinter import messagebox
 from tkinter import ttk
 from tkinter import PhotoImage
-# class ScrollableFrame(ttk.Frame): 
-#     def __init__(self, container, *args, **kwargs): 
-#         super().__init__(container, *args, **kwargs) 
-#         canvas = tk.Canvas(self) 
-#         scrollbar = ttk.Scrollbar(self, orient="vertical", command=canvas.yview) 
-#         self.scrollable_frame = ttk.Frame(canvas) 
-#         self.scrollable_frame.bind( "<Configure>", 
-#                                    lambda e: canvas.configure( scrollregion=canvas.bbox("all") ) ) 
-#         canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw") 
-#         canvas.configure(yscrollcommand=scrollbar.set) 
-#         canvas.grid(row=0, column=0, sticky="nsew") 
-#         scrollbar.grid(row=0, column=1, sticky="ns") 
-#         self.grid_rowconfigure(0, weight=1) 
-#         self.grid_columnconfigure(0, weight=1)
+import pickle
+from tkinter import simpledialog
 
 class TurnTrackerApp:
     def __init__(self, root):
@@ -45,6 +33,9 @@ class TurnTrackerApp:
         self.child_label = tk.Label(self.root, text=f"You and your partner have just had your first child, it's a {self.child_gender}! Please give them a name:",bg="white")
         self.name_entry = tk.Entry(self.root,bg="white")  # Add an entry widget for the name
         self.child_entry = tk.Entry(self.root,bg="white")  # Add an entry widget for the name
+
+        self.save_button = tk.Button(root, text="Save Game", command=self.save_game,bg="plum1") 
+        self.load_button = tk.Button(root, text="Load Game", command=self.load_game,bg="plum2") 
 
         # Create a StringVar to hold the selected choice 
         self.parent_income_label = tk.Label(self.root, text=f"Your income determines how challenging it will be to raise your child! Please choose your income:",bg="white")
@@ -100,6 +91,7 @@ class TurnTrackerApp:
                 "Communication Skills":0,
                 "Cognitive Skills":0,
                 "Physical Development":0}
+        
         # Create a dictionary to hold the labels for dynamic updates 
         self.attributes_labels = {} 
         frame2 = tk.Frame(self.root,bg="white")
@@ -140,8 +132,8 @@ class TurnTrackerApp:
             physical_category_label = tk.Label(physical_frame, text=category, font=("Helvetica", 10),bg="white") 
             physical_category_label.grid(row=1, column=0)
 
-
-        # Create a notebook (tabbed interface) 
+            
+        # Create a notebook (tabbed interface)
         notebook = ttk.Notebook(root) 
         notebook.grid(pady=5) 
         # Create frames for each skill tree 
@@ -213,6 +205,7 @@ class TurnTrackerApp:
 
         self.start_game_button.grid(row=12, column=0)
         self.restart_button.grid(row=13, column=0)
+        self.load_button.grid(row=15, column=0)
         
     def end_game(self): 
         messagebox.showinfo("Game Over", f"Your child {self.child.name} died after {self.child.age_days} days. Better luck next time!") 
@@ -256,6 +249,7 @@ class TurnTrackerApp:
             self.option_menu.grid_forget()
             self.start_game_button.grid_forget()
             self.restart_button.grid_forget()
+            self.load_button.grid_forget()
             self.remaining_label.grid(row=7, column=0,pady=3)
 
             for i in range(len(self.spinbox_list)):
@@ -301,10 +295,10 @@ class TurnTrackerApp:
             self.update_buy_button_states()
 
 
-            self.parent_info.grid()
+            #self.parent_info.grid()
             self.restart_button.grid()
-            
-            
+            self.save_button.grid()
+                 
 			# Create the parent
             self.parent=parental_unit(self.name)
 
@@ -477,6 +471,128 @@ class TurnTrackerApp:
         for val in range(len(self.spinbox_values)):
             self.spinbox_values[val].set(default_vals[val])
 
+    def save_game(self):
+        save_slot = simpledialog.askstring("Save Game", "Enter save slot name:")
+        if save_slot: 
+            with open(f"data\game_saves\{save_slot}.pkl", "wb") as f: 
+                game_state = {"turn":self.turn_count,
+                                  "parent":self.parent,
+                                  "child":self.child,
+                                  "difficulty":self.parent_income,
+                                  "current_money":self.current_money}
+                pickle.dump(game_state, f)
+            messagebox.showinfo("Game Saved", f"Game saved in slot: {save_slot}") 
+            print(f"Game saved in slot: {save_slot}") 
+            
+    def load_game(self): 
+        load_slot = simpledialog.askstring("Load Game", "Enter save slot name:")
+        if load_slot:
+            try: 
+                with open(f"data\game_saves\{load_slot}.pkl", "rb") as f:
+                    game_state = pickle.load(f)
+                if self.turn_count==0:
+                    self.parent_income = game_state["difficulty"]
+                    self.name_label.grid_forget()
+                    self.turn_label.grid_forget()
+                    self.name_entry.grid_forget()
+                    self.child_label.grid_forget()
+                    self.child_info.grid_forget()
+                    self.child_entry.grid_forget()
+                    self.parent_income_label.grid_forget()
+                    self.option_menu.grid_forget()
+                    self.start_game_button.grid_forget()
+                    self.restart_button.grid_forget()
+                    self.load_button.grid_forget()
+                    self.remaining_label.grid(row=7, column=0,pady=3)
+
+                    for i in range(len(self.spinbox_list)):
+                        #self.spin_labels[i].grid(pady=5,row=i+8, column=0, sticky="n")  
+                        #self.spinbox_list[i].grid(pady=5,row=i+8, column=0, sticky="s")
+                        self.spin_labels[i].grid(padx=3,row=8, column=i%7, sticky="n")  
+                        self.spinbox_list[i].grid(padx=3,row=9, column=i%7, sticky="s")
+
+                    self.child_info.grid()
+
+                    frame_image = tk.Frame(self.root,bg="white")
+                    frame_image.grid(row=11,pady=5,padx=5)
+                    self.image_label = tk.Label(frame_image, image=self.image,bg="white")
+                    self.image_label.grid(row=11,column=0%4,rowspan=4,padx=5)
+                    self.next_turn_button = tk.Button(frame_image, text="Next Day", command=self.increment_turn,bg="lightgreen")
+                    self.next_5turn_button = tk.Button(frame_image, text="Advance 5 Days", command=lambda: self.multi_increment_turn(5),bg="lightgreen")
+                    self.next_10turn_button = tk.Button(frame_image, text="Advance 10 Days", command=lambda: self.multi_increment_turn(10),bg="lightgreen")
+                    self.next_turn_button.grid(row=11,column=1%4,rowspan=1)
+                    self.next_5turn_button.grid(row=12,column=1%4,rowspan=1)
+                    self.next_10turn_button.grid(row=13,column=1%4,rowspan=1)
+                    # Create a frame for income
+                    self.income_frame = tk.Frame(frame_image, bd=2, relief="groove",bg="white")
+                    self.income_frame.grid(row=14,column=1)
+                    # Create a label for the score value
+                    self.current_money = game_state["current_money"]
+                    self.income_label = tk.Label(self.income_frame, text=f"${self.current_money}", font=("Helvetica", 12),bg="white")
+                    self.income_label.grid()
+                    self.income_category_label = tk.Label(self.income_frame, text="Current money from "+self.parent_income, font=("Helvetica", 10),bg="white") 
+                    self.income_category_label.grid()
+
+                    # Create buttons to spend money
+                    self.buy_nut_supp = tk.Button(frame_image, text="Buy nutrition supplements ($50)", command=lambda: self.buy_needs(["Energy"], 20),bg="lightyellow")
+                    self.buy_doc = tk.Button(frame_image, text="See a doctor ($50)", command=lambda: self.buy_needs(["Health"], 20),bg="lightyellow")
+                    self.buy_party = tk.Button(frame_image, text="Host a social event ($50)", command=lambda: self.buy_skills(["Social Skills","Communication Skills"], 20),bg="lightyellow")
+                    self.buy_toy = tk.Button(frame_image, text="Buy a new toy ($50)", command=lambda: self.buy_needs(["Love for Parent"], 20),bg="lightyellow")
+                    self.buy_meal = tk.Button(frame_image, text="Go out to eat ($50)", command=lambda: self.buy_needs(["Hunger"], 20),bg="lightyellow")
+                    # add in the buy buttons
+                    self.buy_nut_supp.grid(row=11,column=2%4,rowspan=1)
+                    self.buy_doc.grid(row=12,column=2%4,rowspan=1) 
+                    self.buy_party.grid(row=13,column=2%4,rowspan=1)
+                    self.buy_toy.grid(row=11,column=3%4,rowspan=1)
+                    self.buy_meal.grid(row=12,column=3%4,rowspan=1)
+                    self.update_buy_button_states()
+
+                    #self.parent_info.grid()
+                    self.restart_button.grid()
+                    self.save_button.grid()
+
+			        # Create the parent
+                    self.parent=game_state["parent"]
+
+                    # Create the child
+                    self.child=game_state["child"]
+                    self.turn_count = game_state["turn"]
+
+                # Increment turn (but without adding stuff)
+                self.parent_info.config(text=str(self.parent.examine_self_return()))
+                turn_attrib, turn_needs, turn_physical,turn_skills, turn_text  =self.child.examine_child()
+                print(turn_attrib)
+                print(turn_needs)
+                self.reset_spinbox_values()
+                # Update the labels with the new attribs
+                for key, value in self.needs_labels.items():
+                    self.needs_labels[key].config(text=turn_needs[key])
+
+                self.income_label.config(text=f"${self.current_money}")
+
+                self.update_buy_button_states()
+
+                # update the frame colors
+                self.update_frame_colors()
+
+                # update skills
+                self.update_skill_trees(turn_skills)
+
+                # Update the labels with the new needs
+                for key, value in self.attributes_labels.items():
+                    self.attributes_labels[key].config(text=turn_attrib[key])
+
+                # Update the labels with the new needs
+                for key, value in self.physical_labels.items():
+                    self.physical_labels[key].config(text=turn_physical[key])
+
+                self.child_info.config(text=str(turn_text))
+
+                messagebox.showinfo("Game Loaded", f"Game loaded from slot: {load_slot}") 
+                print(f"Game loaded from slot: {load_slot}")
+            except FileNotFoundError: 
+                print(f"No saved game found in slot: {load_slot}") 
+
     def run(self):
         self.root.mainloop()
 
@@ -485,6 +601,7 @@ def main():
     root.configure(bg="white")
     root.title("Parental Idle Game") 
     root.geometry("1000x850")
+    root.resizable(True, True)
     app = TurnTrackerApp(root)
     app.run()
 
