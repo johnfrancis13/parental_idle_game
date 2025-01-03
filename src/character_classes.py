@@ -130,6 +130,7 @@ class baby(event_class):
         self.gender=gender
         self.age_days=0
         self.age="Newborn"
+        self.development_tracker="On track"
         if gender == "boy":
             self.weight = round(random.uniform(6.5, 9.5),2)
             self.height = round(random.uniform(17.5, 23),2)
@@ -153,7 +154,8 @@ class baby(event_class):
                 "Age (category)":self.age,
                 "Age (days)":self.age_days,
                 "Weight (lbs)":round(self.weight,3),
-                "Height (in)":round(self.height,3)},
+                "Height (in)":round(self.height,3),
+                "Developmental Progress":self.development_tracker},
                 self.skills,
                 f"""{self.name}'s current inclinations are: {self.natural_inclinations}""")
 #                    {wrapped_summary}""")
@@ -530,6 +532,10 @@ class baby(event_class):
 
         # Update Skills
         self.update_skills()
+
+        # Update develoment track once a week (but not for the first two weeks)
+        if self.age_days%7==0 and self.age_days>10:
+            self.check_developmental_progress()
         
         # Ensure values stay within (0,100)
         for category, label in self.needs.items():
@@ -713,6 +719,36 @@ class baby(event_class):
                 return round(random.uniform(0.0055, 0.011),3) # boys outpace girls
             else:
                 return round(random.uniform(0.004, 0.009),3)
+    def check_developmental_progress(self):
+        # check attributes and see if they are on track
+        issue_attributes = []
+        for attribute in self.attributes:
+            if self.attributes[attribute]*.8<self.age_days:
+                issue_attributes.append(attribute)
+        
+        super_attributes = []
+        for attribute in self.attributes:
+            if self.attributes[attribute]*.4>self.age_days:
+                super_attributes.append(attribute)
+       
+        if len(issue_attributes)>0:
+            if len(issue_attributes)==1:
+                self.development_tracker= f"Behind on {issue_attributes[0]}."
+            elif len(issue_attributes)==6:
+                self.development_tracker= f"Behind on all skills."
+            else:
+                self.development_tracker= f"Behind on {len(issue_attributes)} skills."
+        elif len(super_attributes)>0:
+            if len(issue_attributes)==1:
+                self.development_tracker= f"Ahead on {issue_attributes[0]}."
+            elif len(issue_attributes)==6:
+                self.development_tracker= f"Ahead on all skills."
+            else:
+                self.development_tracker= f"Ahead on {len(issue_attributes)} skills."
+        else:
+            self.development_tracker="On track"
+
+
 
     # Function to update attributes, skills, needs, and Height/Weight based on the action of the turn
     def process_action(self, action):
