@@ -36,6 +36,7 @@ class TurnTrackerApp:
 
         self.save_button = tk.Button(root, text="Save Game", command=self.save_game,bg="plum1") 
         self.load_button = tk.Button(root, text="Load Game", command=self.load_game,bg="plum2") 
+        self.how_to_play_button = tk.Button(root, text="How to play", command=self.how_to_play,bg="snow") 
 
         # Create a StringVar to hold the selected choice 
         self.parent_income_label = tk.Label(self.root, text=f"Your income determines how challenging it will be to raise your child! Please choose your income:",bg="white")
@@ -206,6 +207,7 @@ class TurnTrackerApp:
         self.start_game_button.grid(row=12, column=0)
         self.restart_button.grid(row=13, column=0)
         self.load_button.grid(row=15, column=0)
+        self.how_to_play_button.grid(row=16, column=0)
         
     def end_game(self): 
         messagebox.showinfo("Game Over", f"Your child {self.child.name} died after {self.child.age_days} days. Better luck next time!") 
@@ -250,6 +252,7 @@ class TurnTrackerApp:
             self.start_game_button.grid_forget()
             self.restart_button.grid_forget()
             self.load_button.grid_forget()
+            self.how_to_play_button.grid_forget()
             self.remaining_label.grid(row=7, column=0,pady=3)
 
             for i in range(len(self.spinbox_list)):
@@ -298,6 +301,7 @@ class TurnTrackerApp:
             #self.parent_info.grid()
             self.restart_button.grid()
             self.save_button.grid()
+            self.how_to_play_button.grid()
                  
 			# Create the parent
             self.parent=parental_unit(self.name)
@@ -483,7 +487,16 @@ class TurnTrackerApp:
                 pickle.dump(game_state, f)
             messagebox.showinfo("Game Saved", f"Game saved in slot: {save_slot}") 
             print(f"Game saved in slot: {save_slot}") 
-            
+    def how_to_play(self):
+        instructions = """ 
+        Welcome to the Parental Clicker Game! Here’s how to play: 
+        1. Click the next turn button to advance to the next day. 
+        2. You have 48 half hour increments each day to spend on actions to care for and raise your child. 
+        3. The difficulty level you choose determines your daily income which allows you to buy one time boosts! 
+        4. Try to keep your child alive and raise the best possible kid!
+        """ 
+        messagebox.showinfo("How to Play", instructions,)
+
     def load_game(self): 
         load_slot = simpledialog.askstring("Load Game", "Enter save slot name:")
         if load_slot:
@@ -503,6 +516,7 @@ class TurnTrackerApp:
                     self.start_game_button.grid_forget()
                     self.restart_button.grid_forget()
                     self.load_button.grid_forget()
+                    self.how_to_play_button.grid_forget()
                     self.remaining_label.grid(row=7, column=0,pady=3)
 
                     for i in range(len(self.spinbox_list)):
@@ -550,6 +564,7 @@ class TurnTrackerApp:
                     #self.parent_info.grid()
                     self.restart_button.grid()
                     self.save_button.grid()
+                    self.how_to_play_button.grid()
 
 			        # Create the parent
                     self.parent=game_state["parent"]
@@ -599,7 +614,7 @@ class TurnTrackerApp:
 def main():
     root = tk.Tk()
     root.configure(bg="white")
-    root.title("Parental Idle Game") 
+    root.title("Parental Clicker Game") 
     root.geometry("1000x850")
     root.resizable(True, True)
     app = TurnTrackerApp(root)
