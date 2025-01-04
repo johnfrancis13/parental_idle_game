@@ -7,6 +7,7 @@ from tkinter import PhotoImage
 import pickle
 from tkinter import simpledialog
 from helpers import create_helper
+from ambitions import develop_ambition,update_ambition,check_ambition_successful
 
 class TurnTrackerApp:
     def __init__(self, root):
@@ -124,7 +125,8 @@ class TurnTrackerApp:
                 "Age (days)":0,
                 "Weight (lbs)":0,
                 "Height (in)":0,
-                "Developmental Progress":"On track"}
+                "Developmental Progress":"On track",
+                "Ambition":"Too young"}
         # Create a dictionary to hold the labels for dynamic updates 
         self.physical_labels = {} 
         frame3 = tk.Frame(self.root,bg="white")
@@ -133,7 +135,7 @@ class TurnTrackerApp:
         for i, (category, score) in enumerate(starting_physical_dict.items()): 
             # Create a frame for each score box
             physical_frame = tk.Frame(frame3, bd=2, relief="groove",bg="white")
-            physical_frame.grid(row=i//6, column=i%6, padx=2, pady=5)
+            physical_frame.grid(row=i//7, column=i%7, padx=2, pady=5)
             # Create a label for the score value
             physical_label = tk.Label(physical_frame, text=score, font=("Helvetica", 12),bg="white") 
             physical_label.grid(row=0, column=0, pady=5) 
@@ -307,7 +309,7 @@ class TurnTrackerApp:
             self.buy_toy = tk.Button(frame_image, text="Buy a new toy ($50)", command=lambda: self.buy_needs(["Love for Parent"], 20),bg="lightyellow")
             self.buy_meal = tk.Button(frame_image, text="Go out to eat ($50)", command=lambda: self.buy_needs(["Hunger"], 20),bg="lightyellow")
             # Create a Menubutton for helpers 
-            self.helperbutton = tk.Menubutton(frame_image, text="Buy a helper ($1,000)", relief="raised",bg="lightyellow")
+            self.helperbutton = tk.Menubutton(frame_image, text="Add a helper ($1,000)", relief="raised",bg="lightyellow")
             
             # Create a menu 
             self.helpermenu = tk.Menu(self.helperbutton, tearoff=0) 
@@ -417,16 +419,28 @@ class TurnTrackerApp:
                 self.image = PhotoImage(file="data/assets/preschooler_image.png")
                 self.image_label.configure(image=self.image)
                 self.image_label.image = self.image # Keep a reference to avoid garbage collection
+                self.child.ambition = develop_ambition(age="Preschooler",
+                                                       child_attributes=self.child.attributes)
+                messagebox.showinfo("Ambition Developed", f"Your child has developed their first ambition, to become a {self.child.ambition}") 
             elif self.turn_count==2190:
                 # Update the image 
                 self.image = PhotoImage(file="data/assets/adolescent_image.png")
                 self.image_label.configure(image=self.image)
                 self.image_label.image = self.image # Keep a reference to avoid garbage collection
+                self.child.ambition = update_ambition(age="Adolescent",
+                                                       child_attributes=self.child.attributes,
+                                                       previous_ambition=self.child.ambition)
+                messagebox.showinfo("Ambition Rethought", f"Your child has thought hard about their ambition, they now hope to become a {self.child.ambition}") 
             elif self.turn_count==4015:
                 # Update the image 
                 self.image = PhotoImage(file="data/assets/preteen_image.png")
                 self.image_label.configure(image=self.image)
                 self.image_label.image = self.image # Keep a reference to avoid garbage collection
+                self.child.ambition = update_ambition(age="Preteen",
+                                                       child_attributes=self.child.attributes,
+                                                       previous_ambition=self.child.ambition)
+                messagebox.showinfo("Ambition Updated", f"Your child has updated their ambition, they now hope to become a {self.child.ambition}") 
+
             elif self.turn_count==4745:
                 # Update the image 
                 self.image = PhotoImage(file="data/assets/teen_image.png")
@@ -620,7 +634,7 @@ class TurnTrackerApp:
                     self.buy_toy = tk.Button(frame_image, text="Buy a new toy ($50)", command=lambda: self.buy_needs(["Love for Parent"], 20),bg="lightyellow")
                     self.buy_meal = tk.Button(frame_image, text="Go out to eat ($50)", command=lambda: self.buy_needs(["Hunger"], 20),bg="lightyellow")
                     # Create a Menubutton for helpers 
-                    self.helperbutton = tk.Menubutton(frame_image, text="Buy a helper ($1,000)", relief="raised",bg="lightyellow")
+                    self.helperbutton = tk.Menubutton(frame_image, text="Add a helper ($1,000)", relief="raised",bg="lightyellow")
                     
                     # Create a menu 
                     self.helpermenu = tk.Menu(self.helperbutton, tearoff=0) 

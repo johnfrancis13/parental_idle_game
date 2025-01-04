@@ -4,7 +4,6 @@ import skill_thresholds
 from tkinter import messagebox
 from events import event_class
 
-
 # Definte the Parental Unit class which will hold all of the information about the player (attributes, skills, abilities, relationships, etc.)
 class parental_unit():
     def __init__(self,
@@ -121,6 +120,7 @@ class baby(event_class):
         self.age_days=0
         self.age="Newborn"
         self.development_tracker="On track"
+        self.ambition = "Too young"
         if gender == "boy":
             self.weight = round(random.uniform(6.5, 9.5),2)
             self.height = round(random.uniform(17.5, 23),2)
@@ -205,7 +205,8 @@ class baby(event_class):
                 "Age (days)":self.age_days,
                 "Weight (lbs)":round(self.weight,3),
                 "Height (in)":round(self.height,3),
-                "Developmental Progress":self.development_tracker},
+                "Developmental Progress":self.development_tracker,
+                "Ambition":self.ambition},
                 self.skills,
                 f"""{self.name}'s current inclinations are: {self.natural_inclinations}""")
 #                    {wrapped_summary}""")
@@ -234,22 +235,6 @@ class baby(event_class):
         if age=="Teen":
             attributes = attributes+bonuses        
         return(attributes)
-    
-    def grow_up(self,
-                new_age, 
-                current_attributes):
-        self.attributes = self.setup_attributes(new_age,
-                                                current_attributes)
-        
-        if new_age=="Adolescent":
-            self.childs_goal = self.select_random_goal()
-
-        print(f"Your child has now grown to: {new_age}")
-        
-    def select_random_goal(self):
-        possible_goal_list = ["Become an athlete","Become a lawyer","Become a doctor","Get married young","Travel the world",
-                              "Get into politics","Become an influencer","Get rich quick"]
-        return(random.choice(possible_goal_list))
     
     def setup_skills(self,
                      base,
