@@ -24,7 +24,7 @@ class parental_unit():
 
         if level ==0: # at the beginning of the game you don't start with any bonuses - or point buy for the first round? maybe point buy AFTER the first round
             self.attributes = self.setup_attributes(base=True)
-            self.helpers = self.setup_helpers(base =True)
+            self.helpers, self.helper_counts = self.setup_helpers(base =True)
             self.skills = self.setup_skills(base =True)
         else:
             self.attributes = self.setup_attributes(base=False,
@@ -37,7 +37,7 @@ class parental_unit():
     def examine_self(self):
         print(f"My name is {self.name}. I have {self.num_of_children} {'child' if self.num_of_children==1 else 'children'}.")
         print(f"My current attributes are: {self.attributes}.")
-        print(f"To help me raise my offspring I currently have a {' and a'.join([key for key in self.helpers if self.helpers[key] is not None])}.")
+        print(f"To help me raise my offspring I currently have a {' and a'.join([key for key in self.helper_counts if self.helper_counts[key]>0])}.")
         print(f"The skills I have developed are: {' '.join([self.skills[key] for key in self.skills if self.skills[key] is not None])}.")
         print(f"My current profession is: {self.profession}.")
 
@@ -46,7 +46,7 @@ class parental_unit():
                My name is {self.name}. I have {self.num_of_children} {'child' if self.num_of_children==1 else 'children'}.
                My current attributes are: 
                {self.attributes}.
-               To help me raise my offspring I currently have a {' and a'.join([key for key in self.helpers if self.helpers[key] is not None])}.
+               To help me raise my offspring I currently have a {' and a'.join([key for key in self.helper_counts if self.helper_counts[key]>0])}.
                The skills I have developed are: 
                {' '.join([self.skills[key] for key in self.skills if self.skills[key] is not None])}
                My current profession is: 
@@ -77,30 +77,20 @@ class parental_unit():
     def setup_helpers(self,
                       base,
                       helpers={}):
-        # Initialize helpers
-        max_helpers = 10
-        tutor_dict = dict.fromkeys(f"{'tutor'}_{i}" for i in range(1, max_helpers + 1))
-        babysitter_dict = dict.fromkeys(f"{'babysitter'}_{i}" for i in range(1, max_helpers + 1))
-        family_dict = dict.fromkeys(f"{'family_member'}_{i}" for i in range(1, max_helpers + 1))
-        base_dict = {"spouse": {"Intelligence":1,
-                              "Creativity":1,
-                              "Socialization":1,
-                              "Empathy":1,
-                              "Fitness":1,
-                              "Willpower":1,
-                              "Endurance":1,
-                              "Perception":1,
-                              "Knowledge":1,
-                              "Prosperity":1},
-                       "chef":None,
-                       "cleaner":None}
-        
-        helper_dict = base_dict | tutor_dict | babysitter_dict | family_dict
-
-        if base==False:
-            helper_dict = {key1: {key2: helpers[key1][key2] + helper_dict[key1][key2] for key2 in helper_dict[key1]} for key1 in helper_dict}
+        if base==True:
+            helper_list = []
+            helper_count = {"partner":0,
+                            "babysitter":0,
+                            "relative":0,
+                            "tutor":0,}
+            return helper_list, helper_count
+        else:
+            raise ValueError("Not implemented yet")     
     
-        return(helper_dict)
+    # Add a new helper and track number of each type
+    def add_helper(self,helper,type=str):
+        self.helpers.append(helper)
+        self.helper_counts[type] += 1
     
     def setup_skills(self,
                      base,
@@ -130,6 +120,7 @@ class baby(event_class):
         self.gender=gender
         self.age_days=0
         self.age="Newborn"
+        self.development_tracker="On track"
         if gender == "boy":
             self.weight = round(random.uniform(6.5, 9.5),2)
             self.height = round(random.uniform(17.5, 23),2)
@@ -146,6 +137,66 @@ class baby(event_class):
             self.needs = self.setup_needs(base=True) 
             self.natural_inclinations = self.setup_natural_inclinations(base=True)   
 
+        self.parent_effects = {}
+        self.update_parent_effects(base=True)
+        self.helper_effects = {}
+        self.update_helper_effects(base=True)
+
+        # Initialize daily helper benefits
+        self.daily_skill_adjustments = {"Motor Skills":0,
+                                        "Social Skills":0,
+                                        "Emotional Skills":0,
+                                        "Communication Skills":0,
+                                        "Cognitive Skills":0,
+                                        "Physical Development":0}
+
+        self.daily_needs_adjustments = {"Hunger":0, 
+                                        "Hygiene":0,
+                                        "Energy":0}
+
+    # add parent effects from a parental class
+    def update_parent_effects(self,base=True,parent=None):
+        if base==True:
+            # base parent effects add no multipliers or additions to the child skill developments
+            parent_effects = {
+                "Motor Skills":0,
+                "Social Skills":0,
+                "Emotional Skills":0,
+                "Communication Skills":0,
+                "Cognitive Skills":0,
+                "Physical Development":0}
+            return parent_effects
+        else:
+            raise ValueError("Error in parent setup")
+        
+    def update_helper_effects(self,base=True,helper_list=[]):
+        if base==True:
+            # base parent effects add no multipliers or additions to the child skill developments
+            helper_effects = {
+                "Motor Skills":0,
+                "Social Skills":0,
+                "Emotional Skills":0,
+                "Communication Skills":0,
+                "Cognitive Skills":0,
+                "Physical Development":0}
+            return helper_effects
+        else:
+            # iterate over each helper in the parent's helper list
+            helper_effects = {
+                "Motor Skills":0,
+                "Social Skills":0,
+                "Emotional Skills":0,
+                "Communication Skills":0,
+                "Cognitive Skills":0,
+                "Physical Development":0}
+            for helper in helper_list:
+                # update daily skill adjustments
+                for key in self.daily_skill_adjustments:
+                    self.daily_skill_adjustments[key] += helper.help_develop_skills()[key]
+
+                # update daily needs adjustments
+                for key in self.daily_needs_adjustments:
+                    self.daily_needs_adjustments[key] += helper.help_child_maintenance()[key]
 
     def examine_child(self):
         return(self.attributes, self.needs, {
@@ -153,7 +204,8 @@ class baby(event_class):
                 "Age (category)":self.age,
                 "Age (days)":self.age_days,
                 "Weight (lbs)":round(self.weight,3),
-                "Height (in)":round(self.height,3)},
+                "Height (in)":round(self.height,3),
+                "Developmental Progress":self.development_tracker},
                 self.skills,
                 f"""{self.name}'s current inclinations are: {self.natural_inclinations}""")
 #                    {wrapped_summary}""")
@@ -362,6 +414,15 @@ class baby(event_class):
      
     # Baseline updates to all features that happens every day
     def update_turn(self):
+        # Add in the daily adjustments
+        for skill in self.attributes:
+            self.attributes[skill] += self.daily_skill_adjustments[skill]
+
+        self.needs["Hunger"] += self.daily_needs_adjustments["Hunger"]
+        self.needs["Hygiene"] += self.daily_needs_adjustments["Hunger"]
+        self.needs["Energy"] += self.daily_needs_adjustments["Hunger"]
+
+
         if self.age=="Newborn":
             # Needs
             self.needs["Hunger"] = self.needs["Hunger"] - self.daily_hunger*2 # require food
@@ -530,6 +591,10 @@ class baby(event_class):
 
         # Update Skills
         self.update_skills()
+
+        # Update develoment track once a week (but not for the first two weeks)
+        if self.age_days%7==0 and self.age_days>10:
+            self.check_developmental_progress()
         
         # Ensure values stay within (0,100)
         for category, label in self.needs.items():
@@ -713,6 +778,36 @@ class baby(event_class):
                 return round(random.uniform(0.0055, 0.011),3) # boys outpace girls
             else:
                 return round(random.uniform(0.004, 0.009),3)
+    def check_developmental_progress(self):
+        # check attributes and see if they are on track
+        issue_attributes = []
+        for attribute in self.attributes:
+            if self.attributes[attribute]*.8<self.age_days:
+                issue_attributes.append(attribute)
+        
+        super_attributes = []
+        for attribute in self.attributes:
+            if self.attributes[attribute]*.4>self.age_days:
+                super_attributes.append(attribute)
+       
+        if len(issue_attributes)>0:
+            if len(issue_attributes)==1:
+                self.development_tracker= f"Behind on {issue_attributes[0]}."
+            elif len(issue_attributes)==6:
+                self.development_tracker= f"Behind on all skills."
+            else:
+                self.development_tracker= f"Behind on {len(issue_attributes)} skills."
+        elif len(super_attributes)>0:
+            if len(issue_attributes)==1:
+                self.development_tracker= f"Ahead on {super_attributes[0]}."
+            elif len(issue_attributes)==6:
+                self.development_tracker= f"Ahead on all skills."
+            else:
+                self.development_tracker= f"Ahead on {len(super_attributes)} skills."
+        else:
+            self.development_tracker="On track"
+
+
 
     # Function to update attributes, skills, needs, and Height/Weight based on the action of the turn
     def process_action(self, action):

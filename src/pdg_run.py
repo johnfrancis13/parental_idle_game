@@ -6,6 +6,7 @@ from tkinter import ttk
 from tkinter import PhotoImage
 import pickle
 from tkinter import simpledialog
+from helpers import create_helper
 
 class TurnTrackerApp:
     def __init__(self, root):
@@ -45,11 +46,14 @@ class TurnTrackerApp:
         # Create the OptionMenu
         self.option_menu = ttk.Combobox(self.root, values=choices,width = 30)
         self.option_menu.set("Average paying job (Regular)")
+
+        self.daily_income_help = 0
         
         self.name_entry.insert(0, "John")
         self.child_entry.insert(0, "GB")
         self.parent_info = tk.Label(self.root, text="Result will appear here",bg="white")
         self.child_info = tk.Label(self.root, text="",bg="white")
+        self.helper_info = tk.Label(self.root, text="",bg="white")
 
         self.image = PhotoImage(file="data/assets/newborn_image.png")
         
@@ -95,6 +99,8 @@ class TurnTrackerApp:
         
         # Create a dictionary to hold the labels for dynamic updates 
         self.attributes_labels = {} 
+        self.attributes_frames = {} 
+        self.attributes_category_labels = {} 
         frame2 = tk.Frame(self.root,bg="white")
         frame2.grid(pady=5)
         # Create the score boxes with labels
@@ -102,6 +108,7 @@ class TurnTrackerApp:
             # Create a frame for each score box
             attributes_frame = tk.Frame(frame2, bd=2, relief="groove",bg="white")
             attributes_frame.grid(row=i//6, column=i%6, padx=2, pady=5)
+            self.attributes_frames[category] = attributes_frame
             # Create a label for the score value
             attributes_label = tk.Label(attributes_frame, text=score, font=("Helvetica", 12),bg="white") 
             attributes_label.grid(row=0, column=0, pady=5) 
@@ -109,13 +116,15 @@ class TurnTrackerApp:
             # Create a label for the category 
             attributes_category_label = tk.Label(attributes_frame, text=category, font=("Helvetica", 10),bg="white") 
             attributes_category_label.grid(row=1, column=0)
+            self.attributes_category_labels[category] = attributes_category_label
 
         starting_physical_dict = {
                 "Name":0,
                 "Age (category)":0,
                 "Age (days)":0,
                 "Weight (lbs)":0,
-                "Height (in)":0}
+                "Height (in)":0,
+                "Developmental Progress":"On track"}
         # Create a dictionary to hold the labels for dynamic updates 
         self.physical_labels = {} 
         frame3 = tk.Frame(self.root,bg="white")
@@ -147,6 +156,7 @@ class TurnTrackerApp:
 
         # update the frame colors
         self.update_frame_colors()
+        self.update_frame_colors_attributes()
 
         def restart(): 
             self.root.destroy() # Destroy the current root window
@@ -241,6 +251,13 @@ class TurnTrackerApp:
             self.name = self.name_entry.get()
             self.child_name = self.child_entry.get()
             self.parent_income = self.option_menu.get()
+            # set the starting money
+            if self.parent_income=="Low paying job (Hard)":
+                self.current_money=0
+            elif self.parent_income=="Average paying job (Regular)":
+                self.current_money=500
+            elif self.parent_income=="High paying job (Easy)":
+                self.current_money=1000
             self.name_label.grid_forget()
             self.turn_label.grid_forget()
             self.name_entry.grid_forget()
@@ -262,6 +279,7 @@ class TurnTrackerApp:
                 self.spinbox_list[i].grid(padx=3,row=9, column=i%7, sticky="s")
 
             self.child_info.grid()
+            self.helper_info.grid()
 
             frame_image = tk.Frame(self.root,bg="white")
             frame_image.grid(row=11,pady=5,padx=5)
@@ -277,7 +295,6 @@ class TurnTrackerApp:
             self.income_frame = tk.Frame(frame_image, bd=2, relief="groove",bg="white")
             self.income_frame.grid(row=14,column=1)
             # Create a label for the score value
-            self.current_money = 0
             self.income_label = tk.Label(self.income_frame, text=f"${self.current_money}", font=("Helvetica", 12),bg="white")
             self.income_label.grid()
             self.income_category_label = tk.Label(self.income_frame, text="Current money from "+self.parent_income, font=("Helvetica", 10),bg="white") 
@@ -289,12 +306,36 @@ class TurnTrackerApp:
             self.buy_party = tk.Button(frame_image, text="Host a social event ($50)", command=lambda: self.buy_skills(["Social Skills","Communication Skills"], 20),bg="lightyellow")
             self.buy_toy = tk.Button(frame_image, text="Buy a new toy ($50)", command=lambda: self.buy_needs(["Love for Parent"], 20),bg="lightyellow")
             self.buy_meal = tk.Button(frame_image, text="Go out to eat ($50)", command=lambda: self.buy_needs(["Hunger"], 20),bg="lightyellow")
+            # Create a Menubutton for helpers 
+            self.helperbutton = tk.Menubutton(frame_image, text="Buy a helper ($1,000)", relief="raised",bg="lightyellow")
+            
+            # Create a menu 
+            self.helpermenu = tk.Menu(self.helperbutton, tearoff=0) 
+            self.helperbutton.configure(menu=self.helpermenu) 
+            # Function to handle selection 
+            def buy_helper(option):
+                new_helper =create_helper(option)
+                self.parent.add_helper(new_helper,type=option)
+                self.daily_income_help += new_helper.help_household_income()
+                self.child.update_helper_effects(base=False,
+                                                 helper_list=self.parent.helpers)
+                print(f"You selected: {option}")
+                self.current_money += -1000
+                self.income_label.config(text=f"${self.current_money}")
+                self.update_buy_button_states()
+
+            # Add choices to the menu 
+            options = ["partner", "babysitter", "relative", "tutor"] 
+            for option in options: 
+                self.helpermenu.add_command(label=option, 
+                                            command=lambda opt=option: buy_helper(opt)) 
             # add in the buy buttons
             self.buy_nut_supp.grid(row=11,column=2%4,rowspan=1)
             self.buy_doc.grid(row=12,column=2%4,rowspan=1) 
             self.buy_party.grid(row=13,column=2%4,rowspan=1)
             self.buy_toy.grid(row=11,column=3%4,rowspan=1)
             self.buy_meal.grid(row=12,column=3%4,rowspan=1)
+            self.helperbutton.grid(row=13,column=3%4,rowspan=1)
             self.update_buy_button_states()
 
 
@@ -333,17 +374,14 @@ class TurnTrackerApp:
 
             # Add Income Money
             if self.parent_income=="Low paying job (Hard)":
-                self.current_money+=1
+                self.current_money+=1+self.daily_income_help
             elif self.parent_income=="Average paying job (Regular)":
-                self.current_money+=2
+                self.current_money+=2+self.daily_income_help
             elif self.parent_income=="High paying job (Easy)":
-                self.current_money+=5
+                self.current_money+=5+self.daily_income_help
             self.income_label.config(text=f"${self.current_money}")
 
             self.update_buy_button_states()
-
-            # update the frame colors
-            self.update_frame_colors()
 
             # update skills
             self.update_skill_trees(turn_skills)
@@ -356,7 +394,13 @@ class TurnTrackerApp:
             for key, value in self.physical_labels.items():
                 self.physical_labels[key].config(text=turn_physical[key])
 
+            # update the frame colors
+            self.update_frame_colors()
+            if self.turn_count%7==0 and self.turn_count>10:
+                self.update_frame_colors_attributes()
+
             self.child_info.config(text=str(turn_text))
+            self.helper_info.config(text=str("My current helpers are: "+", ".join([a.type for a in self.parent.helpers]))) 
             #self.turn_label.config(text=f"Day: {self.turn_count}")
             if self.turn_count==90:
                 # Update the image 
@@ -406,14 +450,17 @@ class TurnTrackerApp:
             self.buy_doc.config(state="disabled") 
             self.buy_party.config(state="disabled")
             self.buy_toy.config(state="disabled")
-            self.buy_meal.config(state="disabled")
-            
+            self.buy_meal.config(state="disabled")            
         else: 
             self.buy_nut_supp.config(state="normal")
             self.buy_doc.config(state="normal") 
             self.buy_party.config(state="normal")
             self.buy_toy.config(state="normal")
             self.buy_meal.config(state="normal")
+        if self.current_money<1000:
+            self.helperbutton.config(state=tk.DISABLED)
+        else:
+            self.helperbutton.config(state=tk.NORMAL)
 
     def update_frame_colors(self):
         for category, label in self.needs_labels.items():
@@ -436,6 +483,24 @@ class TurnTrackerApp:
                 self.needs_frames[category].config(bg="white")
                 self.needs_labels[category].config(bg="white")
                 self.needs_category_labels[category].config(bg="white")
+    
+    def update_frame_colors_attributes(self):
+        for category, label in self.attributes_labels.items():
+            value = label.cget("text")
+            try: 
+                value = int(value)
+                if value*.8<self.turn_count and self.turn_count>13: 
+                    self.attributes_frames[category].config(bg="firebrick1")
+                    self.attributes_labels[category].config(bg="firebrick1")
+                    self.attributes_category_labels[category].config(bg="firebrick1")
+                else:
+                    self.attributes_frames[category].config(bg="lightgreen")
+                    self.attributes_labels[category].config(bg="lightgreen") 
+                    self.attributes_category_labels[category].config(bg="lightgreen") 
+            except ValueError:
+                self.attributes_frames[category].config(bg="white")
+                self.attributes_labels[category].config(bg="white")
+                self.attributes_category_labels[category].config(bg="white")
             
     def update_skill_trees(self,skills):
         # Clear existing labels in the frames
@@ -526,6 +591,7 @@ class TurnTrackerApp:
                         self.spinbox_list[i].grid(padx=3,row=9, column=i%7, sticky="s")
 
                     self.child_info.grid()
+                    self.helper_info.grid()
 
                     frame_image = tk.Frame(self.root,bg="white")
                     frame_image.grid(row=11,pady=5,padx=5)
@@ -553,12 +619,36 @@ class TurnTrackerApp:
                     self.buy_party = tk.Button(frame_image, text="Host a social event ($50)", command=lambda: self.buy_skills(["Social Skills","Communication Skills"], 20),bg="lightyellow")
                     self.buy_toy = tk.Button(frame_image, text="Buy a new toy ($50)", command=lambda: self.buy_needs(["Love for Parent"], 20),bg="lightyellow")
                     self.buy_meal = tk.Button(frame_image, text="Go out to eat ($50)", command=lambda: self.buy_needs(["Hunger"], 20),bg="lightyellow")
+                    # Create a Menubutton for helpers 
+                    self.helperbutton = tk.Menubutton(frame_image, text="Buy a helper ($1,000)", relief="raised",bg="lightyellow")
+                    
+                    # Create a menu 
+                    self.helpermenu = tk.Menu(self.helperbutton, tearoff=0) 
+                    self.helperbutton.configure(menu=self.helpermenu) 
+                    # Function to handle selection 
+                    def buy_helper(option): 
+                        new_helper = create_helper(option)
+                        self.parent.add_helper(new_helper,type=option)
+                        self.daily_income_help += new_helper.help_household_income()
+                        self.child.update_helper_effects(base=False,
+                                                         helper_list=self.parent.helpers)
+                        print(f"You selected: {option}")
+                        self.current_money += -1000
+                        self.income_label.config(text=f"${self.current_money}")
+                        self.update_buy_button_states()
+
+                    # Add choices to the menu 
+                    options = ["partner", "babysitter", "relative", "tutor"] 
+                    for option in options: 
+                        self.helpermenu.add_command(label=option, 
+                                                    command=lambda opt=option: buy_helper(opt)) 
                     # add in the buy buttons
                     self.buy_nut_supp.grid(row=11,column=2%4,rowspan=1)
                     self.buy_doc.grid(row=12,column=2%4,rowspan=1) 
                     self.buy_party.grid(row=13,column=2%4,rowspan=1)
                     self.buy_toy.grid(row=11,column=3%4,rowspan=1)
                     self.buy_meal.grid(row=12,column=3%4,rowspan=1)
+                    self.helperbutton.grid(row=13,column=3%4,rowspan=1)
                     self.update_buy_button_states()
 
                     #self.parent_info.grid()
@@ -589,6 +679,7 @@ class TurnTrackerApp:
 
                 # update the frame colors
                 self.update_frame_colors()
+                self.update_frame_colors_attributes()
 
                 # update skills
                 self.update_skill_trees(turn_skills)
@@ -602,6 +693,7 @@ class TurnTrackerApp:
                     self.physical_labels[key].config(text=turn_physical[key])
 
                 self.child_info.config(text=str(turn_text))
+                self.helper_info.config(text=str("My current helpers are: "+", ".join([a.type for a in self.parent.helpers]))) 
 
                 messagebox.showinfo("Game Loaded", f"Game loaded from slot: {load_slot}") 
                 print(f"Game loaded from slot: {load_slot}")
