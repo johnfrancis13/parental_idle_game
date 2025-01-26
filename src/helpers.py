@@ -83,16 +83,16 @@ class partner(helper):
     def adjust_skills(self):
 
         skills_dict = {
-                        "Intelligence":random.randint(0,2),
-                        "Creativity":random.randint(0,2),
-                        "Socialization":random.randint(0,2),
-                        "Empathy":random.randint(0,2),
-                        "Fitness":random.randint(0,2),
-                        "Willpower":random.randint(0,4),
-                        "Endurance":random.randint(0,2),
-                        "Perception":random.randint(0,4),
-                        "Knowledge":random.randint(0,2),
-                        "Prosperity":random.randint(0,3),
+                        "Intelligence":random.choices([0,1,2],[.5,.35,.15])[0],
+                        "Creativity":random.choices([0,1,2],[.5,.35,.15])[0],
+                        "Socialization":random.choices([0,1,2],[.5,.35,.15])[0],
+                        "Empathy":random.choices([0,1,2],[.5,.35,.15])[0],
+                        "Fitness":random.choices([0,1,2],[.5,.35,.15])[0],
+                        "Willpower":random.choices([0,1,2],[.5,.35,.15])[0],
+                        "Endurance":random.choices([0,1,2],[.5,.35,.15])[0],
+                        "Perception":random.choices([0,1,2],[.5,.35,.15])[0],
+                        "Knowledge":random.choices([0,1,2],[.5,.35,.15])[0],
+                        "Prosperity":random.choices([0,1,2,3],[.4,.3,.2,.1])[0],
         }
         # Create a new dictionary to store the summed values 
         result_dict = {} 
@@ -111,15 +111,15 @@ class babysitter(helper):
     def adjust_skills(self):
         skills_dict = {
                         "Intelligence":0,
-                        "Creativity":random.randint(0,1),
-                        "Socialization":random.randint(0,1),
-                        "Empathy":random.randint(0,1),
+                        "Creativity":random.choices([0,1,2],[.6,.3,.1])[0],
+                        "Socialization":random.choices([0,1,2],[.6,.3,.1])[0],
+                        "Empathy":random.choices([0,1,2],[.6,.3,.1])[0],
                         "Fitness":0,
-                        "Willpower":random.randint(0,3),
-                        "Endurance":random.randint(0,3),
-                        "Perception":random.randint(0,3),
+                        "Willpower":random.choices([0,1,2],[.6,.3,.1])[0],
+                        "Endurance":random.choices([0,1,2],[.6,.3,.1])[0],
+                        "Perception":random.choices([0,1,2],[.6,.3,.1])[0],
                         "Knowledge":0,
-                        "Prosperity":0
+                        "Prosperity":0,
         }
         # Create a new dictionary to store the summed values 
         result_dict = {} 
@@ -132,8 +132,7 @@ class babysitter(helper):
 class relative(helper):
     def __init__(self,quality):
         super().__init__(quality)
-        self.relative_type = random.choice(["grandparent","older sibling","younger sibling","fun uncle",
-                                           "quirky uncle","fun aunt","quirky aunt","cousin"])
+        self.relative_type = random.choice(["grandparent","fun uncle","quirky uncle","fun aunt","quirky aunt","cousin"])
         self.type=self.relative_type
         self.helper_stats = self.adjust_skills()
         
@@ -141,15 +140,15 @@ class relative(helper):
     def adjust_skills(self):
         prosperity = random.randint(1,2) if self.relative_type == "grandparent" or "aunt" in self.relative_type or "uncle" in self.relative_type else random.randint(0,1) 
         skills_dict = {
-                        "Intelligence":random.randint(0,1),
-                        "Creativity":random.randint(0,1),
-                        "Socialization":random.randint(0,1),
-                        "Empathy":random.randint(0,1),
-                        "Fitness":random.randint(0,1),
-                        "Willpower":random.randint(0,2),
-                        "Endurance":random.randint(0,1),
-                        "Perception":random.randint(0,2),
-                        "Knowledge":random.randint(0,1),
+                        "Intelligence":random.choices([0,1],[.65,.35])[0],
+                        "Creativity":random.choices([0,1],[.65,.35])[0],
+                        "Socialization":random.choices([0,1],[.65,.35])[0],
+                        "Empathy":random.choices([0,1],[.65,.35])[0],
+                        "Fitness":random.choices([0,1],[.65,.35])[0],
+                        "Willpower":random.choices([0,1,2],[.5,.35,.15])[0],
+                        "Endurance":random.choices([0,1],[.65,.35])[0],
+                        "Perception":random.choices([0,1,2],[.5,.35,.15])[0],
+                        "Knowledge":random.choices([0,1],[.65,.35])[0],
                         "Prosperity":prosperity,
         }
         # Create a new dictionary to store the summed values 
@@ -168,20 +167,20 @@ class tutor(helper):
         self.helper_stats = self.adjust_skills()
         
     def adjust_skills(self):
-        intelligence = random.randint(1,3) if self.tutor_type == "academic" else random.randint(0,1) 
-        socialization = random.randint(1,3) if self.tutor_type == "social" else random.randint(0,1) 
-        fitness = random.randint(1,3) if self.tutor_type == "fitness" else random.randint(0,1) 
+        intelligence = random.choices([1,2,3],[.5,.35,.15])[0] if self.tutor_type == "academic" else random.choices([0,1],[.65,.35])[0]
+        socialization = random.choices([1,2,3],[.5,.35,.15])[0] if self.tutor_type == "social" else random.choices([0,1],[.65,.35])[0]
+        fitness = random.choices([1,2,3],[.5,.35,.15])[0] if self.tutor_type == "fitness" else random.choices([0,1],[.65,.35])[0]
         skills_dict = {
                         "Intelligence":intelligence,
-                        "Creativity":random.randint(0,2),
+                        "Creativity":random.choices([0,1,2],[.5,.35,.15])[0],
                         "Socialization":socialization,
                         "Empathy":0,
                         "Fitness":fitness,
                         "Willpower":0,
                         "Endurance":0,
                         "Perception":0,
-                        "Knowledge":random.randint(0,2),
-                        "Prosperity":0,
+                        "Knowledge":random.choices([0,1,2],[.5,.35,.15])[0],
+                        "Prosperity":0,                       
         }
         # Create a new dictionary to store the summed values 
         result_dict = {} 

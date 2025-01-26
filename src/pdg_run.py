@@ -8,6 +8,7 @@ import pickle
 from tkinter import simpledialog
 from helpers import create_helper
 from ambitions import develop_ambition,update_ambition,check_ambition_successful
+from high_scores import get_high_scores, save_high_score, calculate_high_score
 
 class TurnTrackerApp:
     def __init__(self, root):
@@ -15,6 +16,7 @@ class TurnTrackerApp:
         self.turn_count = 0
         self.name = ""  # Initialize an empty name
         self.child_gender=random.choice(["boy","girl"])
+        self.game_over = False  # Add a flag to indicate if the game is over
 
         # Configure the style for the ttk.Notebook 
         style = ttk.Style() 
@@ -39,6 +41,7 @@ class TurnTrackerApp:
         self.save_button = tk.Button(root, text="Save Game", command=self.save_game,bg="plum1") 
         self.load_button = tk.Button(root, text="Load Game", command=self.load_game,bg="plum2") 
         self.how_to_play_button = tk.Button(root, text="How to play", command=self.how_to_play,bg="snow") 
+        self.high_scores_button = tk.Button(root, text="High Scores", command=self.show_high_scores,bg="snow")
 
         # Create a StringVar to hold the selected choice 
         self.parent_income_label = tk.Label(self.root, text=f"Your income determines how challenging it will be to raise your child! Please choose your income:",bg="white")
@@ -220,13 +223,27 @@ class TurnTrackerApp:
         self.restart_button.grid(row=13, column=0)
         self.load_button.grid(row=15, column=0)
         self.how_to_play_button.grid(row=16, column=0)
+        self.high_scores_button.grid(row=17,column=0)
         
+    def calc_high_score(self):
+        # Call the external function, passing self as the instance
+        return(calculate_high_score(self))
+
     def end_game(self): 
-        messagebox.showinfo("Game Over", f"Your child {self.child.name} died after {self.child.age_days} days. Better luck next time!") 
+        if self.game_over:
+            return  # If the game is already over, do nothing
+        
+        self.game_over = True  # Set the flag to indicate the game is over
+        messagebox.showinfo("Game Over", f"Your child {self.child.name} died after {self.child.age_days} days. Better luck next time!")
+        # still need a way of determing the players score
+        score= self.calc_high_score()
+        save_high_score(score, self.name)
         self.root.quit() # Close the game window
 
     def end_game_victory(self): 
         messagebox.showinfo("Game Over", f"Your child {self.child.name} turned 18 and is ready to leave the house. Better luck next time!")
+        score= self.calc_high_score()
+        save_high_score(score, self.name)
         # Need to add in some stats/ability to reset with some benefits
         self.root.quit() # Close the game window
     
@@ -272,6 +289,7 @@ class TurnTrackerApp:
             self.restart_button.grid_forget()
             self.load_button.grid_forget()
             self.how_to_play_button.grid_forget()
+            self.high_scores_button.grid_forget()
             self.remaining_label.grid(row=7, column=0,pady=3)
 
             for i in range(len(self.spinbox_list)):
@@ -287,9 +305,9 @@ class TurnTrackerApp:
             frame_image.grid(row=11,pady=5,padx=5)
             self.image_label = tk.Label(frame_image, image=self.image,bg="white")
             self.image_label.grid(row=11,column=0%4,rowspan=4,padx=5)
-            self.next_turn_button = tk.Button(frame_image, text="Next Day", command=self.increment_turn,bg="lightgreen")
-            self.next_5turn_button = tk.Button(frame_image, text="Advance 5 Days", command=lambda: self.multi_increment_turn(5),bg="lightgreen")
-            self.next_10turn_button = tk.Button(frame_image, text="Advance 10 Days", command=lambda: self.multi_increment_turn(10),bg="lightgreen")
+            self.next_turn_button = tk.Button(frame_image, text="Advance 1 day", command=self.increment_turn,bg="lightgreen")
+            self.next_5turn_button = tk.Button(frame_image, text="Advance 1 week", command=lambda: self.multi_increment_turn(7),bg="lightgreen")
+            self.next_10turn_button = tk.Button(frame_image, text="Advance 1 month", command=lambda: self.multi_increment_turn(30),bg="lightgreen")
             self.next_turn_button.grid(row=11,column=1%4,rowspan=1)
             self.next_5turn_button.grid(row=12,column=1%4,rowspan=1)
             self.next_10turn_button.grid(row=13,column=1%4,rowspan=1)
@@ -345,6 +363,7 @@ class TurnTrackerApp:
             self.restart_button.grid()
             self.save_button.grid()
             self.how_to_play_button.grid()
+            self.high_scores_button.grid()
                  
 			# Create the parent
             self.parent=parental_unit(self.name)
@@ -476,6 +495,19 @@ class TurnTrackerApp:
         else:
             self.helperbutton.config(state=tk.NORMAL)
 
+    # Function to display the high scores in a new window
+    def show_high_scores(self):
+        high_scores = get_high_scores()
+        high_scores_window = tk.Toplevel(self.root)
+        high_scores_window.title("High Scores")
+        # Set minimum size for the window
+        high_scores_window.geometry("250x350")
+        tk.Label(high_scores_window, text="High Scores", font=("Helvetica", 16)).pack(pady=10)
+
+        for score in high_scores:
+            tk.Label(high_scores_window, text=score, font=("Helvetica", 12), anchor='w').pack(fill='x', padx=10)
+
+        
     def update_frame_colors(self):
         for category, label in self.needs_labels.items():
             value = label.cget("text")
@@ -525,7 +557,7 @@ class TurnTrackerApp:
         # Populate frames with skill labels using grid 
         for tree, skill_list in skills.items():
             if len(skill_list)>0:
-                for i, skill in enumerate(reversed(skill_list)):
+                for i, skill in enumerate(skill_list[-5:]):
                     label = tk.Label(self.skill_frames[tree], text=skill,bg="lightblue")
                     label.grid(row=i, column=0, pady=2, sticky="w")
 
@@ -569,10 +601,10 @@ class TurnTrackerApp:
     def how_to_play(self):
         instructions = """ 
         Welcome to the Parental Clicker Game! Here’s how to play: 
-        1. Click the next turn button to advance to the next day. 
+        1. Click one of the advance (day/week/month) buttons to advance your child's life. 
         2. You have 48 half hour increments each day to spend on actions to care for and raise your child. 
-        3. The difficulty level you choose determines your daily income which allows you to buy one time boosts! 
-        4. Try to keep your child alive and raise the best possible kid!
+        3. The difficulty level you choose determines your daily income which allows you to buy one time boosts and permanent helpers! 
+        4. Try to keep your child alive and raise the best possible kid, helping them achieve their ultimate ambition!
         """ 
         messagebox.showinfo("How to Play", instructions,)
 
@@ -596,6 +628,7 @@ class TurnTrackerApp:
                     self.restart_button.grid_forget()
                     self.load_button.grid_forget()
                     self.how_to_play_button.grid_forget()
+                    self.high_scores_button.grid_forget()
                     self.remaining_label.grid(row=7, column=0,pady=3)
 
                     for i in range(len(self.spinbox_list)):
@@ -611,9 +644,9 @@ class TurnTrackerApp:
                     frame_image.grid(row=11,pady=5,padx=5)
                     self.image_label = tk.Label(frame_image, image=self.image,bg="white")
                     self.image_label.grid(row=11,column=0%4,rowspan=4,padx=5)
-                    self.next_turn_button = tk.Button(frame_image, text="Next Day", command=self.increment_turn,bg="lightgreen")
-                    self.next_5turn_button = tk.Button(frame_image, text="Advance 5 Days", command=lambda: self.multi_increment_turn(5),bg="lightgreen")
-                    self.next_10turn_button = tk.Button(frame_image, text="Advance 10 Days", command=lambda: self.multi_increment_turn(10),bg="lightgreen")
+                    self.next_turn_button = tk.Button(frame_image, text="Advance 1 day", command=self.increment_turn,bg="lightgreen")
+                    self.next_5turn_button = tk.Button(frame_image, text="Advance 1 week", command=lambda: self.multi_increment_turn(7),bg="lightgreen")
+                    self.next_10turn_button = tk.Button(frame_image, text="Advance 1 month", command=lambda: self.multi_increment_turn(30),bg="lightgreen")
                     self.next_turn_button.grid(row=11,column=1%4,rowspan=1)
                     self.next_5turn_button.grid(row=12,column=1%4,rowspan=1)
                     self.next_10turn_button.grid(row=13,column=1%4,rowspan=1)
@@ -669,6 +702,7 @@ class TurnTrackerApp:
                     self.restart_button.grid()
                     self.save_button.grid()
                     self.how_to_play_button.grid()
+                    self.high_scores_button.grid()
 
 			        # Create the parent
                     self.parent=game_state["parent"]
@@ -724,6 +758,7 @@ def main():
     root.geometry("1000x850")
     root.resizable(True, True)
     app = TurnTrackerApp(root)
+    # add in additional methods from another file
     app.run()
 
 if __name__ == "__main__":

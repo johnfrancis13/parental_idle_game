@@ -805,7 +805,7 @@ class baby(event_class):
                "Play":{"Needs":{"Energy":-4,
                                 "Hygiene":-2},
                         "Attributes": self.develop_skill("Play"),
-                        "Size":{"Weight":-.01}},
+                        "Size":{"Weight":-.0025}},
                "Teach":{"Needs":{"Energy":-6},
                         "Attributes":self.develop_skill("Teach"),
                         "Size":None},
