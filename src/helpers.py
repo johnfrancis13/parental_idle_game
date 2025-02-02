@@ -72,6 +72,9 @@ class helper:
     # Allow the created helper to help with household income, multipler for daily income
     def help_household_income(self):
         return self.helper_stats["Prosperity"]
+    
+    def print_stats(self):
+        print(self.helper_stats)
 
 class partner(helper):
     def __init__(self,quality):

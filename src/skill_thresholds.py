@@ -9,7 +9,7 @@ skill_thresholds_young = {"Motor Skills": {# Newborn
                                           400: "Rolling Over: Rolling over from front to back and back to front.", 
                                           500: "Sitting Up: Sitting up without support.", 
                                           600: "Crawling: Moving on hands and knees.",
-                                          700: "Standing: Standing with support and then independently.",
+                                          700: "Standing: Standing with support.",
                                           800: "Cruising: Walking while holding onto furniture.", 
                                           900: "Pulling Up: Pulling up from sitting to standing position.",
                                           # Toddler
@@ -25,48 +25,59 @@ skill_thresholds_young = {"Motor Skills": {# Newborn
                                           20: "Smiling at faces", 
                                           80: "Making eye contact",
                                           110: "Reacting to familiar voices",
+                                          110: "Mimicking simple facial expressions (sticking out tongue)",
                                           200: "Cooing and babbling",
                                           # Infant
                                           300: "Social Smiling: Smiling in response to others.",
                                           400: "Recognizing Familiar Faces: Showing preference for familiar people.",
                                           500: "Imitating Movements: Copying simple actions of caregivers.", 
-                                          500: "Interactive Play: Engaging in simple games like peek-a-boo.",
+                                          600: "Interactive Play: Engaging in simple games like peek-a-boo.",
                                           700: "Separation Anxiety: Showing distress when separated from parents.",
+                                          800: "Showing interest in other children",
                                           # Toddler
                                           1000: "Parallel Play: Playing alongside other children but not directly with them.",
                                           1100: "Sharing: Beginning to share toys and take turns.",
                                           1200: "Showing Empathy: Comforting others when they are upset.",
                                           1300: "Pretend Play: Engaging in simple make-believe games.",
                                           1400: "Following Simple Rules: Understanding and following basic game rules.",
-                                          1500: "Playing with Others: Enjoying playing interactive games with other children."
+                                          1500: "Playing with Others: Enjoying playing interactive games with other children.",
+                                          1600: "Expressing preferences and dislikes clearly"
+                                          
                                           },
                         "Emotional Skills": {# Newborn
                                           10: "Showing distress (crying)", 
                                           70: "Self-soothing (sucking thumb)",
                                           150: "Reacting to comfort (calming down when held)",
                                           200: "Expressing joy (smiling)",
+                                          250: "Reacting to changes in environment with distress or curiosity",
                                           # Infant
                                           300: "Expressing Emotions: Displaying a range of emotions like joy, anger, and fear.",
                                           400: "Attachment Formation: Developing strong emotional bonds with caregivers.",
-                                          500: "Self-Soothing: Starting to calm themselves when upset.",
+                                          500: "Self-Soothing: Seeking comfort from caregivers when upset.",
+                                          600: "Identifying strangers with anxiety and fear of unfamiliar faces",
+                                          700: "Self-Soothing: Starting to calm themselves when upset.",
                                           # Toddler
                                           1000: "Expressing Frustration: Showing and managing feelings of frustration.",
                                           1100: "Calming Down: Learning to calm down with less help from adults.",
                                           1200: "Showing Affection: Giving hugs, kisses, or showing affection.",
                                           1300: "Recognizing Emotions: Identifying basic emotions in themselves and others.",
                                           1400: "Coping with Transitions: Handling changes in routine with less difficulty.",
-                                          1500: "Increasing Independence: Doing small tasks independently, like dressing."
+                                          1500: "Increasing Independence: Doing small tasks independently, like dressing.",
+                                          1600: "Accepting minor disappointments (e.g., waiting for a turn)"
                                                 },
                         "Communication Skills": { # Newborn
                                           20: "Cooing to communicate", 
                                           40: "Crying differently for different needs",
                                           160: "Responding to sounds",
                                           200: "Mimicking sounds",
+                                          240: "Turning head towards familiar voices",
+                                          280: "Recognizing and reacting to changes in tone of voice",
                                           # Infant
-                                          300: "Babbling: Repeating syllables and sounds.", 
+                                          300: "Babbling: Experimenting with syllables and sounds.", 
                                           400: "Responding to Name: Turning head towards sounds.",
                                           500: "Gesturing: Using hands to communicate, such as waving or pointing.", 
                                           600: "First Words: Saying simple words like 'mama' or 'dada'.",
+                                          800: "Following simple instructions (e.g., 'come here')",
                                           # Toddler
                                           1000: "Speaking in Sentences: Forming simple sentences.",
                                           1100: "Asking Questions: Asking simple questions like 'What’s that?' or 'Why?'",
@@ -81,10 +92,12 @@ skill_thresholds_young = {"Motor Skills": {# Newborn
                                           130: "Showing curiosity (staring at new objects)",
                                           200: "Reacting to changes in environment (startling)",
                                           # Infant
-                                          300: "Object Permanence: Understanding that objects continue to exist even when out of sight.",
-                                          400: "Cause and Effect: Realizing that actions can cause reactions, like shaking a rattle to make noise.",
-                                          500: "Exploring with Senses: Using sight, touch, taste, smell, and hearing to learn about the world.",
-                                          600: "Problem Solving: Simple problem-solving like finding hidden objects.",
+                                          300: "Exploring objects and toys with hands and mouth",
+                                          400: "Object Permanence: Understanding that objects continue to exist even when out of sight.",
+                                          500: "Cause and Effect: Realizing that actions can cause reactions, like shaking a rattle to make noise.",
+                                          600: "Exploring with Senses: Using sight, touch, taste, smell, and hearing to learn about the world.",
+                                          700: "Problem Solving: Simple problem-solving like finding hidden objects.",
+                                          800: "Imitating actions and sounds",
                                           # Toddler
                                           1000: "Sorting Shapes and Colors: Sorting objects by shape and color.",
                                           1100: "Puzzles: Solving simple puzzles.",
@@ -94,12 +107,15 @@ skill_thresholds_young = {"Motor Skills": {# Newborn
                                           1500: "Pretend Play: Using imagination to play."
                                           }, 
                         "Physical Development": {# Newborn
-                                                80: "Displaying strengthened neck muscles", 
+                                                40: "Displaying strengthened neck muscles", 
+                                                80: "Beginning to move arms and legs", 
+                                                120: "Coordinating sucking, swallowing, and breathing",
                                                 180: "Showing improved coordination of limbs",
                                                 # Infant
                                                 300: "Teething: Beginning to get their first teeth.",
                                                 400: "Eating Solid Foods: Starting to eat baby-friendly solid foods.",
                                                 500: "Improved Hand-Eye Coordination: Better control over movements to interact with objects.",
+                                                600: "Gaining control over head and neck",
                                                  # Toddler
                                                 1000: "Improved Balance: Maintaining balance while walking or running.",
                                                 1100: "Fine Motor Skills: Using fingers for tasks like turning pages or stringing beads.",

@@ -9,6 +9,7 @@ from tkinter import simpledialog
 from helpers import create_helper
 from ambitions import develop_ambition,update_ambition,check_ambition_successful
 from high_scores import get_high_scores, save_high_score, calculate_high_score
+from achievements import load_achievements, check_achievements
 
 class TurnTrackerApp:
     def __init__(self, root):
@@ -42,6 +43,7 @@ class TurnTrackerApp:
         self.load_button = tk.Button(root, text="Load Game", command=self.load_game,bg="plum2") 
         self.how_to_play_button = tk.Button(root, text="How to play", command=self.how_to_play,bg="snow") 
         self.high_scores_button = tk.Button(root, text="High Scores", command=self.show_high_scores,bg="snow")
+        self.achievements_button = tk.Button(root, text="Achievements", command=self.show_achievements,bg="snow")
 
         # Create a StringVar to hold the selected choice 
         self.parent_income_label = tk.Label(self.root, text=f"Your income determines how challenging it will be to raise your child! Please choose your income:",bg="white")
@@ -224,10 +226,15 @@ class TurnTrackerApp:
         self.load_button.grid(row=15, column=0)
         self.how_to_play_button.grid(row=16, column=0)
         self.high_scores_button.grid(row=17,column=0)
+        self.achievements_button.grid(row=18,column=0)
         
     def calc_high_score(self):
         # Call the external function, passing self as the instance
         return(calculate_high_score(self))
+    
+    def check_achievements_turn(self):
+        # Call the external function, passing self as the instance
+        return(check_achievements(self))
 
     def end_game(self): 
         if self.game_over:
@@ -290,6 +297,7 @@ class TurnTrackerApp:
             self.load_button.grid_forget()
             self.how_to_play_button.grid_forget()
             self.high_scores_button.grid_forget()
+            self.achievements_button.grid_forget()
             self.remaining_label.grid(row=7, column=0,pady=3)
 
             for i in range(len(self.spinbox_list)):
@@ -340,6 +348,7 @@ class TurnTrackerApp:
                 self.child.update_helper_effects(base=False,
                                                  helper_list=self.parent.helpers)
                 print(f"You selected: {option}")
+                new_helper.print_stats()
                 self.current_money += -1000
                 self.income_label.config(text=f"${self.current_money}")
                 self.update_buy_button_states()
@@ -364,6 +373,7 @@ class TurnTrackerApp:
             self.save_button.grid()
             self.how_to_play_button.grid()
             self.high_scores_button.grid()
+            self.achievements_button.grid()
                  
 			# Create the parent
             self.parent=parental_unit(self.name)
@@ -387,6 +397,7 @@ class TurnTrackerApp:
         if self.turn_count>0:
             self.parent_info.config(text=str(self.parent.examine_self_return()))
             turn_attrib, turn_needs, turn_physical,turn_skills, turn_text  =self.child.examine_child()
+            self.check_achievements_turn()
             print(turn_attrib)
             print(turn_needs)
             # Update the labels with the new attribs
@@ -440,7 +451,7 @@ class TurnTrackerApp:
                 self.image_label.image = self.image # Keep a reference to avoid garbage collection
                 self.child.ambition = develop_ambition(age="Preschooler",
                                                        child_attributes=self.child.attributes)
-                messagebox.showinfo("Ambition Developed", f"Your child has developed their first ambition, to become a {self.child.ambition}") 
+                messagebox.showinfo("Ambition Developed", f"Your child has developed their first ambition. Your child dreams of becomeing a {self.child.ambition}!") 
             elif self.turn_count==2190:
                 # Update the image 
                 self.image = PhotoImage(file="data/assets/adolescent_image.png")
@@ -506,6 +517,28 @@ class TurnTrackerApp:
 
         for score in high_scores:
             tk.Label(high_scores_window, text=score, font=("Helvetica", 12), anchor='w').pack(fill='x', padx=10)
+
+     # Function to display achievements in a new window
+    def show_achievements(self):
+        achievements = load_achievements()
+        achievement_window  = tk.Toplevel(self.root)
+        achievement_window.title("Achievements")
+        # Set minimum size for the window
+        achievement_window.geometry("600x300")
+        tk.Label(achievement_window, text="Achievements", font=("Helvetica", 16)).pack(pady=10)
+
+        unlocked = [a for a in achievements if a["unlocked"]]
+        locked = [a for a in achievements if not a["unlocked"]]
+
+        tk.Label(achievement_window, text=f"{len(unlocked)}/{len(achievements)} achievements unlocked.", font=("Helvetica", 12), anchor='w').pack(fill='x', padx=10)
+
+        for achievement in unlocked:
+            achievement_text = f"{achievement['name']}: {achievement['description']}"
+            tk.Label(achievement_window, text=achievement_text, font=("Helvetica", 12), anchor='w').pack(fill='x', padx=10)
+    
+        for achievement in locked:
+            achievement_text = f"{achievement['name']}: {achievement['description']}"
+            tk.Label(achievement_window, text=achievement_text, font=("Helvetica", 10), fg="grey", anchor='w').pack(fill='x', padx=10)
 
         
     def update_frame_colors(self):
@@ -629,6 +662,7 @@ class TurnTrackerApp:
                     self.load_button.grid_forget()
                     self.how_to_play_button.grid_forget()
                     self.high_scores_button.grid_forget()
+                    self.achievements_button.grid_forget()
                     self.remaining_label.grid(row=7, column=0,pady=3)
 
                     for i in range(len(self.spinbox_list)):
@@ -703,6 +737,7 @@ class TurnTrackerApp:
                     self.save_button.grid()
                     self.how_to_play_button.grid()
                     self.high_scores_button.grid()
+                    self.achievements_button.grid()
 
 			        # Create the parent
                     self.parent=game_state["parent"]

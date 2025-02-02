@@ -21,7 +21,7 @@ def develop_ambition(age:str="Preschooler",
                               "engineer", "scientist", "musician", "builder"]
     elif primary_attribute=="Physical Development":
         possible_ambitions = [ "astronaut", "firefighter", "police officer", "chef", "pilot", "superhero", "dancer", "builder"]  
-    child_ambition = random.choice(possible_ambitions,1)
+    child_ambition = random.choice(possible_ambitions)
 
     return child_ambition
 
