@@ -27,18 +27,6 @@ def reformat_app_for_school(self):
 # THis function will determine the starting point for the school level attributes
 def determine_school_starting_attributes(self):
 
-    basic_attribute_school_mapping = {
-                "Motor Skills":["Life skills","Physical Development"],
-                "Social Skills":["Social Skills","Communication Skills"],
-                "Emotional Skills":["Emotional Skills"],
-                "Communication Skills":["Communication Skills","Emotional Skills","Life skills"],
-                "Cognitive Skills":["Academic Skills","Life skills"],
-                "Physical Development":["Physical Development"]}
-    
-    for key, value in self.attributes_labels.items():
-                self.attributes_labels[key]
-
-
     starting_attributes_dict = {
                 "Academic Skills":0,
                 "Social Skills":0,
@@ -47,6 +35,18 @@ def determine_school_starting_attributes(self):
                 "Creativity":0,
                 "Life skills":0,
                 "Physical Development":0}
+    
+    basic_attribute_school_mapping = {
+                "Academic Skills":["Cognitive Skills"],
+                "Social Skills":["Social Skills"],
+                "Emotional Skills":["Emotional Skills"],
+                "Communication Skills":["Communication Skills"],
+                "Creativity":["Cognitive Skills","Communication Skills"],
+                "Life skills":["Cognitive Skills","Motor Skills"],
+                "Physical Development":["Motor Skills","Physical Development"]}
+    
+    for key in starting_attributes_dict:
+        starting_attributes_dict[key] +=  sum([round(int(self.attributes[a])*.25) for a in basic_attribute_school_mapping[key]])
     
     return  starting_attributes_dict 
 

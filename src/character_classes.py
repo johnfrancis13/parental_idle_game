@@ -3,6 +3,7 @@ import textwrap
 import skill_thresholds
 from tkinter import messagebox
 from events import event_class
+from school_years import determine_school_starting_attributes
 
 # Definte the Parental Unit class which will hold all of the information about the player (attributes, skills, abilities, relationships, etc.)
 class parental_unit():
@@ -251,6 +252,42 @@ class baby(event_class):
             skills_dict = {key: skills[key] for key in skills_dict}
 
         return(skills_dict)
+    
+    def adapt_attributes_school_preschool(self):
+        self.attributes = determine_school_starting_attributes(self)
+        print(f"New attributes are: {self.attributes}")
+        return(self.attributes)
+    
+    def adapt_skills_school_preschool(self):
+        self.skills = {"Academic Skills":[],
+                "Social Skills":[],
+                "Emotional Skills":[],
+                "Communication Skills":[],
+                "Creativity":[],
+                "Life skills":[],
+                "Physical Development":[]}
+
+        new_skill_adjusments = {"Academic Skills":0,
+                "Social Skills":0,
+                "Emotional Skills":0,
+                "Communication Skills":0,
+                "Creativity":0,
+                "Life skills":0,
+                "Physical Development":0}
+        basic_attribute_school_mapping = {
+                "Academic Skills":["Cognitive Skills"],
+                "Social Skills":["Social Skills"],
+                "Emotional Skills":["Emotional Skills"],
+                "Communication Skills":["Communication Skills"],
+                "Creativity":["Cognitive Skills","Communication Skills"],
+                "Life skills":["Cognitive Skills","Motor Skills"],
+                "Physical Development":["Motor Skills","Physical Development"]}
+        for key in new_skill_adjusments:
+            new_skill_adjusments[key] +=  sum([self.daily_skill_adjustments[a] for a in basic_attribute_school_mapping[key]])
+
+        self.daily_skill_adjustments = new_skill_adjusments
+
+        return(self.skills)
     
     def setup_needs(self,
                      base,

@@ -151,14 +151,14 @@ class TurnTrackerApp:
 
             
         # Create a notebook (tabbed interface)
-        notebook = ttk.Notebook(root) 
-        notebook.grid(pady=5) 
+        self.notebook = ttk.Notebook(root) 
+        self.notebook.grid(pady=5) 
         # Create frames for each skill tree 
         self.skill_trees = ["Motor Skills","Social Skills","Emotional Skills","Communication Skills","Cognitive Skills","Physical Development"] 
         self.skill_frames = {} 
         for skill_tree in self.skill_trees: 
-            frame = ttk.Frame(notebook) 
-            notebook.add(frame, text=skill_tree) 
+            frame = ttk.Frame(self.notebook) 
+            self.notebook.add(frame, text=skill_tree) 
             self.skill_frames[skill_tree] = frame 
 
         # update the frame colors
@@ -235,7 +235,7 @@ class TurnTrackerApp:
     def check_achievements_turn(self):
         # Call the external function, passing self as the instance
         return(check_achievements(self))
-
+    
     def end_game(self): 
         if self.game_over:
             return  # If the game is already over, do nothing
@@ -419,8 +419,12 @@ class TurnTrackerApp:
             self.update_skill_trees(turn_skills)
 
             # Update the labels with the new needs
-            for key, value in self.attributes_labels.items():
-                self.attributes_labels[key].config(text=turn_attrib[key])
+            if self.turn_count<=1095:
+                for key, value in self.attributes_labels.items():
+                    self.attributes_labels[key].config(text=turn_attrib[key])
+            else:
+                for key, value in self.school_attributes_labels.items():
+                    self.school_attributes_labels[key].config(text=turn_attrib[key])
 
             # Update the labels with the new needs
             for key, value in self.physical_labels.items():
@@ -445,13 +449,88 @@ class TurnTrackerApp:
                 self.image_label.configure(image=self.image)
                 self.image_label.image = self.image # Keep a reference to avoid garbage collection
             elif self.turn_count==1095:
+                self.child.ambition = develop_ambition(age="Preschooler",
+                                                       child_attributes=self.child.attributes)
+                messagebox.showinfo("Ambition Developed", f"Your child has developed their first ambition. Your child dreams of becoming a {self.child.ambition}!") 
+
+                # Reformat app for school years
+                # remove old elements?
+                #self.reset_ui()
+        
+                # Create a dictionary to hold the labels for dynamic updates 
+                # Create the score boxes with labels
+                for key in self.attributes_labels: 
+                    # Create a frame for each score box
+                    self.attributes_frames[key].grid_forget()
+                    # Create a label for the score value
+                    self.attributes_labels[key].grid_forget()
+                    # Create a label for the category 
+                    self.attributes_category_labels[key].grid_forget()
+
+                self.notebook.grid_forget()
+                # Clear existing labels in the frames
+                #for frame in self.skill_frames.values(): 
+                #    for widget in frame.winfo_children(): 
+                #        widget.destroy()
+                # add in the new elements
+                
+                # get the new attributes based on where the child got to
+                self.school_starting_attributes_dict = self.child.adapt_attributes_school_preschool()
+                
+                # Should look something like:
+                # self.school_starting_attributes_dict = {
+                # "Academic Skills":0,
+                # "Social Skills":0,
+                # "Emotional Skills":0,
+                # "Communication Skills":0,
+                # "Creativity":0,
+                # "Life skills":0,
+                # "Physical Development":0}
+                # Create a dictionary to hold the labels for dynamic updates
+                
+                # still not sure where these should be new or different than the original ones...
+                self.school_attributes_labels = {} 
+                self.school_attributes_frames = {} 
+                self.school_attributes_category_labels = {} 
+                frame2 = tk.Frame(self.root,bg="white")
+                frame2.grid(row=1,pady=5)
+                # Create the score boxes with labels
+                for i, (category, score) in enumerate(self.school_starting_attributes_dict.items()): 
+                    # Create a frame for each score box
+                    school_attributes_frames = tk.Frame(frame2, bd=2, relief="groove",bg="white")
+                    school_attributes_frames.grid(row=i//7, column=i%7, padx=2, pady=5)
+                    self.school_attributes_frames[category] = school_attributes_frames
+                    # Create a label for the score value
+                    school_attributes_labels = tk.Label(school_attributes_frames, text=score, font=("Helvetica", 12),bg="white") 
+                    school_attributes_labels.grid(row=0, column=0, pady=5) 
+                    self.school_attributes_labels[category] = school_attributes_labels 
+                    # Create a label for the category 
+                    school_attributes_category_labels = tk.Label(school_attributes_frames, text=category, font=("Helvetica", 10),bg="white") 
+                    school_attributes_category_labels.grid(row=1, column=0)
+                    self.school_attributes_category_labels[category] = school_attributes_category_labels
+
+                self.child.adapt_skills_school_preschool()
+                # add in the new notebook
+                # Create a notebook (tabbed interface)
+                self.notebook = ttk.Notebook(self.root) 
+                self.notebook.grid(row=3,pady=5) 
+                # Create frames for each skill tree 
+                self.skill_trees = ["Academic Skills","Social Skills","Emotional Skills","Communication Skills","Creativity","Life skills","Physical Development"] 
+                self.skill_frames = {} 
+                for skill_tree in self.skill_trees: 
+                    frame = ttk.Frame(self.notebook) 
+                    self.notebook.add(frame, text=skill_tree) 
+                    self.skill_frames[skill_tree] = frame 
+
+                # update the frame colors
+                self.update_frame_colors()
+                self.update_frame_colors_attributes()
+
                 # Update the image 
                 self.image = PhotoImage(file="data/assets/preschooler_image.png")
                 self.image_label.configure(image=self.image)
                 self.image_label.image = self.image # Keep a reference to avoid garbage collection
-                self.child.ambition = develop_ambition(age="Preschooler",
-                                                       child_attributes=self.child.attributes)
-                messagebox.showinfo("Ambition Developed", f"Your child has developed their first ambition. Your child dreams of becomeing a {self.child.ambition}!") 
+
             elif self.turn_count==2190:
                 # Update the image 
                 self.image = PhotoImage(file="data/assets/adolescent_image.png")
@@ -481,9 +560,12 @@ class TurnTrackerApp:
                 self.end_game_victory()
 
 
-        if self.spinbox_values[0].get():
-            self.turn_count += 1
-            
+        self.turn_count += 1
+
+    def reset_ui(self):
+        for widget in self.root.winfo_children():
+                    widget.grid_forget()
+    
     def multi_increment_turn(self,number):
         for _ in range(number):
             self.increment_turn()
@@ -564,22 +646,42 @@ class TurnTrackerApp:
                 self.needs_category_labels[category].config(bg="white")
     
     def update_frame_colors_attributes(self):
-        for category, label in self.attributes_labels.items():
-            value = label.cget("text")
-            try: 
-                value = int(value)
-                if value*.8<self.turn_count and self.turn_count>13: 
-                    self.attributes_frames[category].config(bg="firebrick1")
-                    self.attributes_labels[category].config(bg="firebrick1")
-                    self.attributes_category_labels[category].config(bg="firebrick1")
-                else:
-                    self.attributes_frames[category].config(bg="lightgreen")
-                    self.attributes_labels[category].config(bg="lightgreen") 
-                    self.attributes_category_labels[category].config(bg="lightgreen") 
-            except ValueError:
-                self.attributes_frames[category].config(bg="white")
-                self.attributes_labels[category].config(bg="white")
-                self.attributes_category_labels[category].config(bg="white")
+        if self.turn_count>=1096:
+            for category, label in self.school_attributes_labels.items():
+                value = label.cget("text")
+                try: 
+                    value = int(value)
+                    if value*.8<self.turn_count:
+                        self.school_attributes_frames[category].config(bg="firebrick1")
+                        self.school_attributes_labels[category].config(bg="firebrick1")
+                        self.school_attributes_category_labels[category].config(bg="firebrick1")
+                    else:
+                        self.school_attributes_frames[category].config(bg="lightgreen")
+                        self.school_attributes_labels[category].config(bg="lightgreen") 
+                        self.school_attributes_category_labels[category].config(bg="lightgreen") 
+
+                except ValueError:
+                    self.school_attributes_frames[category].config(bg="white")
+                    self.school_attributes_labels[category].config(bg="white")
+                    self.school_attributes_category_labels[category].config(bg="white")
+             
+        else:
+            for category, label in self.attributes_labels.items():
+                value = label.cget("text")
+                try: 
+                    value = int(value)
+                    if value*.8<self.turn_count and self.turn_count>13: 
+                        self.attributes_frames[category].config(bg="firebrick1")
+                        self.attributes_labels[category].config(bg="firebrick1")
+                        self.attributes_category_labels[category].config(bg="firebrick1")
+                    else:
+                        self.attributes_frames[category].config(bg="lightgreen")
+                        self.attributes_labels[category].config(bg="lightgreen") 
+                        self.attributes_category_labels[category].config(bg="lightgreen") 
+                except ValueError:
+                    self.attributes_frames[category].config(bg="white")
+                    self.attributes_labels[category].config(bg="white")
+                    self.attributes_category_labels[category].config(bg="white")
             
     def update_skill_trees(self,skills):
         # Clear existing labels in the frames
@@ -601,7 +703,7 @@ class TurnTrackerApp:
         for i in range(len(self.spinbox_list)):
             action_dict[self.actions[i]] = self.spinbox_values[i].get()
 
-        print(action_dict)
+        print(f"Time allocation for turn {self.turn_count}: {action_dict}")
         # iterate over each key and calculate new child values
         for key in action_dict:
             action_amount = int(action_dict[key])
@@ -760,20 +862,21 @@ class TurnTrackerApp:
 
                 self.update_buy_button_states()
 
-                # update the frame colors
-                self.update_frame_colors()
-                self.update_frame_colors_attributes()
-
                 # update skills
                 self.update_skill_trees(turn_skills)
 
-                # Update the labels with the new needs
+                # Update the labels with the new attributes
                 for key, value in self.attributes_labels.items():
                     self.attributes_labels[key].config(text=turn_attrib[key])
 
                 # Update the labels with the new needs
                 for key, value in self.physical_labels.items():
                     self.physical_labels[key].config(text=turn_physical[key])
+
+                 # update the frame colors
+                self.update_frame_colors()
+                self.update_frame_colors_attributes()
+
 
                 self.child_info.config(text=str(turn_text))
                 self.helper_info.config(text=str("My current helpers are: "+", ".join([a.type for a in self.parent.helpers]))) 
