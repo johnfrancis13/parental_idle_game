@@ -36,30 +36,31 @@ traits = {
 }
 
 
-def create_random_start_traits(level="normal",num_starting_traits=3):
+def create_random_start_traits(level="regular",num_starting_traits=3):
     '''
     Function to create a random set of traits
-    level = ["easy","normal","hard"] # difficulty
+    level = ["easy","regular","hard"] # difficulty
     num_starting_traits = int() # number of traits you start with, default 3
     '''
-    if num_starting_traits<=2 or num_starting_traits>=5:
+    if num_starting_traits<2 or num_starting_traits>=5:
         raise ValueError("The number of starting traits must be 2,3 or 4 in this version of the game")
 
-    if level=="easy":
+    level = level.lower()
+    if "easy" in level:
         if num_starting_traits==2:
             weights = [.05,.25,.7]
         elif num_starting_traits==3:
             weights = [0.05, 0.15, 0.2, 0.6]
         elif num_starting_traits==4:
             weights = [0.05,.1,.2,.3,.35]
-    elif level=="normal":
+    elif "regular" in level:
         if num_starting_traits==2:
             weights = [.15,.6,.25]
         elif num_starting_traits==3:
             weights = [0.1, 0.2, 0.5, 0.2]
         elif num_starting_traits==4:
             weights = [0.1,.15,.2,.35,.2]
-    elif level=="hard":
+    elif "hard" in level:
         if num_starting_traits==2:
             weights = [.65,.25,.1]
         elif num_starting_traits==3:
@@ -67,7 +68,7 @@ def create_random_start_traits(level="normal",num_starting_traits=3):
         elif num_starting_traits==4:
             weights = [.35,.3,.2,.1,.05]
     else:
-        raise ValueError("level must be one of easy,normal, or hard")
+        raise ValueError("level must be one of easy,regular, or hard")
 
     choices = [a for a in range(num_starting_traits+1)]
     

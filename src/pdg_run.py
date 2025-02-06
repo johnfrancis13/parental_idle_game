@@ -10,6 +10,7 @@ from helpers import create_helper
 from ambitions import develop_ambition,update_ambition,check_ambition_successful
 from high_scores import get_high_scores, save_high_score, calculate_high_score
 from achievements import load_achievements, check_achievements
+from traits import create_random_start_traits
 
 class TurnTrackerApp:
     def __init__(self, root):
@@ -52,6 +53,23 @@ class TurnTrackerApp:
         # Create the OptionMenu
         self.option_menu = ttk.Combobox(self.root, values=choices,width = 30)
         self.option_menu.set("Average paying job (Regular)")
+
+        # Traits
+        self.parent_trait_label = tk.Label(self.root, text=f"Traits are randomly determined. They effect your parenting attributes and can be passed to your child! Choose your difficulty :",bg="white")
+        # Define the choices
+        trait_choices1 = ["Mostly negative traits (Hard)", "Balanced traits (Regular)", "Mostly positive traits (Easy)"] 
+        # Create the OptionMenu
+        self.parent_trait_choice = ttk.Combobox(self.root, values=trait_choices1,width = 30)
+        self.parent_trait_choice.set("Balanced traits (Regular)")
+
+         # Partner
+        self.partner_trait_label = tk.Label(self.root, text=f"Your partner will help raise your child. Your partner's traits can also be passed to your child! Choose your difficulty :",bg="white")
+        # Define the choices
+        trait_choices2 = ["Mostly negative traits (Hard)", "Balanced traits (Regular)", "Mostly positive traits (Easy)"] 
+        # Create the OptionMenu
+        self.partner_trait_choice = ttk.Combobox(self.root, values=trait_choices2,width = 30)
+        self.partner_trait_choice.set("Balanced traits (Regular)")
+
 
         self.daily_income_help = 0
         
@@ -220,13 +238,17 @@ class TurnTrackerApp:
         self.child_entry.grid(row=9, column=0)
         self.parent_income_label.grid(row=10, column=0)
         self.option_menu.grid(row=11, column=0)
+        self.parent_trait_label.grid(row=12, column=0)
+        self.parent_trait_choice.grid(row=13, column=0)
+        self.partner_trait_label.grid(row=14, column=0)
+        self.partner_trait_choice.grid(row=15, column=0)
 
-        self.start_game_button.grid(row=12, column=0)
-        self.restart_button.grid(row=13, column=0)
-        self.load_button.grid(row=15, column=0)
-        self.how_to_play_button.grid(row=16, column=0)
-        self.high_scores_button.grid(row=17,column=0)
-        self.achievements_button.grid(row=18,column=0)
+        self.start_game_button.grid(row=16, column=0)
+        self.restart_button.grid(row=17, column=0)
+        self.load_button.grid(row=19, column=0)
+        self.how_to_play_button.grid(row=20, column=0)
+        self.high_scores_button.grid(row=21,column=0)
+        self.achievements_button.grid(row=22,column=0)
         
     def calc_high_score(self):
         # Call the external function, passing self as the instance
@@ -277,6 +299,8 @@ class TurnTrackerApp:
             self.name = self.name_entry.get()
             self.child_name = self.child_entry.get()
             self.parent_income = self.option_menu.get()
+            self.parent_traits = create_random_start_traits(self.parent_trait_choice.get(),2)
+            self.partner_traits = create_random_start_traits(self.partner_trait_choice.get(),2)
             # set the starting money
             if self.parent_income=="Low paying job (Hard)":
                 self.current_money=0
@@ -291,7 +315,11 @@ class TurnTrackerApp:
             self.child_info.grid_forget()
             self.child_entry.grid_forget()
             self.parent_income_label.grid_forget()
+            self.parent_trait_label.grid_forget()
+            self.partner_trait_label.grid_forget()
             self.option_menu.grid_forget()
+            self.parent_trait_choice.grid_forget()
+            self.partner_trait_choice.grid_forget()
             self.start_game_button.grid_forget()
             self.restart_button.grid_forget()
             self.load_button.grid_forget()
@@ -321,13 +349,19 @@ class TurnTrackerApp:
             self.next_10turn_button.grid(row=13,column=1%4,rowspan=1)
             # Create a frame for income
             self.income_frame = tk.Frame(frame_image, bd=2, relief="groove",bg="white")
-            self.income_frame.grid(row=14,column=1)
+            self.income_frame.grid(row=14,column=1%4,rowspan=1)
             # Create a label for the score value
             self.income_label = tk.Label(self.income_frame, text=f"${self.current_money}", font=("Helvetica", 12),bg="white")
             self.income_label.grid()
             self.income_category_label = tk.Label(self.income_frame, text="Current money from "+self.parent_income, font=("Helvetica", 10),bg="white") 
             self.income_category_label.grid()
             
+            # Buttons to view parents
+            self.view_parent_button = tk.Button(frame_image, text="View parent", command=self.view_parent,bg="HotPink1") 
+            self.view_partner_button = tk.Button(frame_image, text="View partner", command=self.view_partner,bg="HotPink1") 
+            self.view_parent_button.grid(row=14,column=2%4)
+            self.view_partner_button.grid(row=14,column=3%4)
+
             # Create buttons to spend money
             self.buy_nut_supp = tk.Button(frame_image, text="Buy nutrition supplements ($50)", command=lambda: self.buy_needs(["Energy"], 20),bg="lightyellow")
             self.buy_doc = tk.Button(frame_image, text="See a doctor ($50)", command=lambda: self.buy_needs(["Health"], 20),bg="lightyellow")
@@ -354,7 +388,7 @@ class TurnTrackerApp:
                 self.update_buy_button_states()
 
             # Add choices to the menu 
-            options = ["partner", "babysitter", "relative", "tutor"] 
+            options = ["babysitter", "relative", "tutor"] 
             for option in options: 
                 self.helpermenu.add_command(label=option, 
                                             command=lambda opt=option: buy_helper(opt)) 
@@ -743,6 +777,22 @@ class TurnTrackerApp:
         """ 
         messagebox.showinfo("How to Play", instructions,)
 
+    def view_parent(self):
+        formatted_str = ""
+        for category, traits_list in self.parent_traits.items():
+            formatted_str += f"{category.replace('_', ' ').title()}: "
+            formatted_str += ", ".join([trait.title() for trait in traits_list]) + "\n\n" 
+
+        messagebox.showinfo("Parent", formatted_str)
+    
+    def view_partner(self):
+        formatted_str = ""
+        for category, traits_list in self.partner_traits.items():
+            formatted_str += f"{category.replace('_', ' ').title()}: "
+            formatted_str += ", ".join([trait.title() for trait in traits_list]) + "\n\n" 
+
+        messagebox.showinfo("Partner", formatted_str)
+
     def load_game(self): 
         load_slot = simpledialog.askstring("Load Game", "Enter save slot name:")
         if load_slot:
@@ -758,7 +808,11 @@ class TurnTrackerApp:
                     self.child_info.grid_forget()
                     self.child_entry.grid_forget()
                     self.parent_income_label.grid_forget()
+                    self.parent_trait_label.grid_forget()
+                    self.partner_trait_label.grid_forget()
                     self.option_menu.grid_forget()
+                    self.parent_trait_choice.grid_forget()
+                    self.partner_trait_choice.grid_forget()
                     self.start_game_button.grid_forget()
                     self.restart_button.grid_forget()
                     self.load_button.grid_forget()
@@ -788,13 +842,19 @@ class TurnTrackerApp:
                     self.next_10turn_button.grid(row=13,column=1%4,rowspan=1)
                     # Create a frame for income
                     self.income_frame = tk.Frame(frame_image, bd=2, relief="groove",bg="white")
-                    self.income_frame.grid(row=14,column=1)
+                    self.income_frame.grid(row=14,column=1%4,rowspan=1)
                     # Create a label for the score value
                     self.current_money = game_state["current_money"]
                     self.income_label = tk.Label(self.income_frame, text=f"${self.current_money}", font=("Helvetica", 12),bg="white")
                     self.income_label.grid()
                     self.income_category_label = tk.Label(self.income_frame, text="Current money from "+self.parent_income, font=("Helvetica", 10),bg="white") 
                     self.income_category_label.grid()
+
+                    # Buttons to view parents
+                    self.view_parent_button = tk.Button(frame_image, text="View parent", command=self.view_parent,bg="HotPink1") 
+                    self.view_partner_button = tk.Button(frame_image, text="View partner", command=self.view_partner,bg="HotPink1") 
+                    self.view_parent_button.grid(row=14,column=2%4)
+                    self.view_partner_button.grid(row=14,column=3%4)
 
                     # Create buttons to spend money
                     self.buy_nut_supp = tk.Button(frame_image, text="Buy nutrition supplements ($50)", command=lambda: self.buy_needs(["Energy"], 20),bg="lightyellow")
@@ -821,7 +881,7 @@ class TurnTrackerApp:
                         self.update_buy_button_states()
 
                     # Add choices to the menu 
-                    options = ["partner", "babysitter", "relative", "tutor"] 
+                    options = ["babysitter", "relative", "tutor"] 
                     for option in options: 
                         self.helpermenu.add_command(label=option, 
                                                     command=lambda opt=option: buy_helper(opt)) 
