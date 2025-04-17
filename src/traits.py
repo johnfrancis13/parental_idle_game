@@ -2,32 +2,32 @@ import random
 # Traits that can be passed down
 traits = {
     "physical_traits": {
-        "positive": ["tall", "slim", "athletic", "strong", "healthy_skin", "beautiful_eyes", "good_posture", "fit", "energetic"],
-        "negative": ["short", "lazy", "hairy", "balding", "frail", "uncoordinated", "prone_to_injury", "obese", "poor_vision"]
+        "positive": ["tall", "slim", "athletic", "strong", "healthy skin", "beautiful eyes", "good posture", "fit", "energetic"],
+        "negative": ["short", "lazy", "hairy", "balding", "frail", "uncoordinated", "prone to injury", "obese", "poor vision"]
     },
     "personality_traits": {
         "positive": ["extroverted", "optimistic", "patient", "empathetic", "creative", "charismatic", "honest", "adaptable", "decisive"],
         "negative": ["pessimistic", "impatient", "stubborn", "indifferent", "irritable", "arrogant", "jealous", "moody", "selfish"]
     },
     "cognitive_abilities": {
-        "positive": ["quick_learner", "logical_thinker", "creative", "good_memory", "analytical", "problem_solver", "innovative", "observant", "detail_oriented"],
-        "negative": ["slow_learner", "forgetful", "average_memory", "disorganized", "struggles_with_math", "easily_distracted", "poor_concentration", "lack_of_focus", "poor_judgment"]
+        "positive": ["quick learner", "logical thinker", "creative", "good memory", "analytical", "problem solver", "innovative", "observant", "detail oriented"],
+        "negative": ["slow learner", "forgetful", "average memory", "disorganized", "struggles with math", "easily distracted", "poor concentration", "lack of focus", "poor judgment"]
     },
     "talents_hobbies": {
-        "positive": ["musically_inclined", "artistic", "athletic", "good_cook", "public_speaker", "quick_reader", "dancer", "mechanic", "engineer", "jogger", "gardening", "coding", "photography", "writing", "crafting"],
-        "negative": ["tone_deaf", "poor_hand-eye_coordination", "gambling", "watching_tv", "collecting_stamps", "shopping", "doing_puzzles", "playing_video_games", "addiction", "overindulgence", "hoarding"]
+        "positive": ["musically inclined", "artistic", "athletic", "good cook", "public speaker", "quick reader", "dancer", "mechanic", "engineer", "jogger", "gardening", "coding", "photography", "writing", "crafting"],
+        "negative": ["tone deaf", "poor hand-eye coordination", "gambling", "watching tv", "collecting stamps", "shopping", "doing puzzles", "playing video games", "addiction", "overindulgence", "hoarding"]
     },
     "psychological_traits": {
-        "positive": ["resilient", "confident", "sensitive", "curious", "self-aware", "emotional_intelligence", "brave", "optimistic", "compassionate"],
-        "negative": ["anxious", "low_self-esteem", "fearful", "moody", "distrustful", "depressed", "paranoid", "insecure", "obsessive"]
+        "positive": ["resilient", "confident", "sensitive", "curious", "self-aware", "emotional intelligence", "brave", "optimistic", "compassionate"],
+        "negative": ["anxious", "low self-esteem", "fearful", "moody", "distrustful", "depressed", "paranoid", "insecure", "obsessive"]
     },
     "behavioral_patterns": {
         "positive": ["organized", "punctual", "tidy", "outgoing", "discipline", "reliable", "diligent", "responsible", "considerate"],
         "negative": ["procrastinator", "untidy", "late", "impulsive", "shy", "lazy", "neglectful", "disorganized", "reckless"]
     },
     "health_traits": {
-        "positive": ["fast_metabolism", "strong_immune_system", "high_endurance", "robust", "active", "resistant_to_allergies", "flexible", "good_recovery", "fit"],
-        "negative": ["allergies", "prone_to_injuries", "prone_to_illness", "low_energy", "weak_immune_system", "chronic_pain", "obesity", "sleep_disorders", "chronic_fatigue"]
+        "positive": ["fast metabolism", "strong immune system", "high endurance", "robust", "active", "resistant to allergies", "flexible", "good recovery", "fit"],
+        "negative": ["allergies", "prone to injuries", "prone to illness", "low energy", "weak immune system", "chronic pain", "obesity", "sleep disorders", "chronic fatigue"]
     },
     "ethical_and_moral_values": {
         "positive": ["honesty", "kindness", "integrity", "generosity", "respectfulness", "fairness", "loyalty", "humility", "responsibility"],

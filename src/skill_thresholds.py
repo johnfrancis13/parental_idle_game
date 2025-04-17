@@ -136,63 +136,217 @@ skill_thresholds_young = {"Motor Skills": {# Newborn
 # Communication Skills: Verbal and non-verbal communication, listening skills, and public speaking
 # Life Skills: Responsibility, time management, organization, and independence.
 
-skill_thresholds_school = {"Academic Skills": {# Preschooler
-                                               20: "Grasping fingers",
-                                               # Adolescent
-                                               30: "Grasping fingers",
-                                               # Pre-teen
-                                               40: "Grasping fingers",
-                                               },
-                                "Social Skills": {# Preschooler
-                                                  20: "Grasping fingers",
-                                                  # Adolescent
-                                                  30: "Grasping fingers",
-                                                  # Pre-teen
-                                                  40: "Grasping fingers"},
-                                "Emotional Skills": {# Preschooler
-                                                     20: "Grasping fingers",
-                                                     # Adolescent
-                                                     30: "Grasping fingers",
-                                                     # Pre-teen
-                                                     40: "Grasping fingers"},
-                                "Communication Skills": {# Preschooler
-                                                         20: "Grasping fingers",
-                                                         # Adolescent
-                                                         30: "Grasping fingers",
-                                                         # Pre-teen
-                                                         40: "Grasping fingers"}, 
-                                "Creativity": {# Preschooler
-                                               20: "Grasping fingers",
-                                               # Adolescent
-                                               30: "Grasping fingers",
-                                               # Pre-teen
-                                               40: "Grasping fingers"},
-                                "Life skills": {# Preschooler
-                                               20: "Grasping fingers",
-                                               # Adolescent
-                                               30: "Grasping fingers",
-                                               # Pre-teen
-                                               40: "Grasping fingers"}, 
-                                "Physical Development": {# Preschooler
-                                                         20: "Grasping fingers",
-                                                         # Adolescent
-                                                         30: "Grasping fingers",
-                                                         # Pre-teen
-                                                         40: "Grasping fingers"}}  
+skill_thresholds_school = {
+                              "Academic Skills": {
+                                  100: "Identifying shapes and colors",
+                                  200: "Recognizing letters and numbers",
+                                  300: "Reading simple sentences and basic addition",
+                                  400: "Writing simple sentences and solving basic math problems",
+                                  500: "Reading comprehension and basic multiplication",
+                                  600: "Writing paragraphs and solving word problems",
+                                  700: "Reading chapter books and understanding fractions",
+                                  800: "Writing essays and solving algebraic equations",
+                                  900: "Analyzing literature and understanding geometry",
+                                  1000: "Advanced problem-solving and critical thinking",
+                              },
+                              "Social Skills": {
+                                  100: "Playing alongside other children",
+                                  200: "Sharing toys and taking turns",
+                                  300: "Following simple group rules",
+                                  400: "Playing cooperatively and making friends",
+                                  500: "Expressing feelings appropriately",
+                                  600: "Working in small groups",
+                                  700: "Building friendships and handling conflicts",
+                                  800: "Showing empathy and understanding others' perspectives",
+                                  900: "Collaborating on projects",
+                                  1000: "Resolving conflicts and developing leadership skills",
+                              },
+                              "Emotional Skills": {
+                                  100: "Recognizing basic emotions (happy, sad, angry)",
+                                  200: "Expressing needs and wants verbally",
+                                  300: "Coping with minor frustrations",
+                                  400: "Managing separation anxiety",
+                                  500: "Developing self-esteem",
+                                  600: "Identifying personal strengths",
+                                  700: "Handling peer pressure",
+                                  800: "Dealing with stress",
+                                  900: "Managing complex emotions",
+                                  1000: "Practicing self-reflection",
+                              },
+                              "Communication Skills": {
+                                  100: "Using gestures to communicate",
+                                  200: "Speaking in simple sentences",
+                                  300: "Following basic instructions",
+                                  400: "Listening actively",
+                                  500: "Engaging in conversations",
+                                  600: "Asking and answering questions",
+                                  700: "Expressing ideas clearly",
+                                  800: "Giving presentations",
+                                  900: "Interpreting non-verbal cues",
+                                  1000: "Practicing public speaking",
+                              },
+                              "Cognitive Skills": {
+                                  100: "Playing simple memory games",
+                                  200: "Completing puzzles",
+                                  300: "Understanding cause and effect",
+                                  400: "Using imaginative play",
+                                  500: "Solving simple problems",
+                                  600: "Making predictions",
+                                  700: "Analyzing information",
+                                  800: "Engaging in creative problem-solving",
+                                  900: "Thinking critically",
+                                  1000: "Applying logic to complex scenarios",
+                              },
+                              "Life Skills": {
+                                  100: "Tidying up toys",
+                                  200: "Following routines",
+                                  300: "Completing simple chores",
+                                  400: "Taking care of personal hygiene",
+                                  500: "Managing time",
+                                  600: "Handling responsibilities",
+                                  700: "Organizing tasks",
+                                  800: "Developing independence",
+                                  900: "Practicing self-discipline",
+                                  1000: "Setting and achieving goals",
+                              },
+                              "Physical Development": {
+                                  100: "Crawling and walking",
+                                  200: "Running and jumping",
+                                  300: "Using fine motor skills (drawing, coloring)",
+                                  400: "Climbing and balancing",
+                                  500: "Riding a bicycle",
+                                  600: "Playing sports",
+                                  700: "Coordinating movements",
+                                  800: "Practicing agility",
+                                  900: "Improving overall fitness",
+                                  1000: "Engaging in advanced physical activities",
+    }
+}
+
  
 # add a couple new skills
 # Interpersonal Relationships: Developing deeper relationships, understanding healthy relationships, and navigating peer pressure
 # Personal Identity: Developing a sense of self, values, ethics, and beliefs.
 # Career and Future Planning: Exploring career interests, goal setting, planning for higher education or vocational training, and work experience.
-skill_thresholds_high_school = {"Academic Skills": {20: "Grasping fingers"},
-                        "Social Skills": {20: "Smiling at faces"},
-                        "Emotional Skills": { 10: "Showing distress (crying)"},
-                        "Communication Skills": { 20: "Cooing sounds" }, 
-                        "Creativity": { 30: "Tracking objects with eyes"},
-                        "Life skills": { 30: "Tracking objects with eyes"}, 
-                        "Physical Development": { 80: "Strengthened neck muscles"},
-                        "Interpersonal Relationships": { 80: "Strengthened neck muscles"},
-                        "Personal Identity": { 80: "Strengthened neck muscles"},
-                        "Career and Future Planning": { 80: "Strengthened neck muscles"},}   
-
-
+skill_thresholds_high_school = {
+    "Academic Skills": {
+        10: "Understanding basic algebra",
+        20: "Writing structured essays",
+        30: "Solving complex equations",
+        40: "Analyzing literature",
+        50: "Conducting scientific experiments",
+        60: "Understanding historical events",
+        70: "Applying critical thinking",
+        80: "Creating research projects",
+        90: "Mastering advanced mathematics",
+        100: "Exploring college-level topics",
+    },
+    "Social Skills": {
+        10: "Participating in group activities",
+        20: "Building friendships",
+        30: "Navigating peer pressure",
+        40: "Understanding healthy relationships",
+        50: "Collaborating on projects",
+        60: "Handling conflicts",
+        70: "Showing empathy",
+        80: "Developing teamwork",
+        90: "Building a support network",
+        100: "Leading group initiatives",
+    },
+    "Emotional Skills": {
+        10: "Recognizing emotions",
+        20: "Managing stress",
+        30: "Developing self-esteem",
+        40: "Coping with academic pressure",
+        50: "Handling rejection",
+        60: "Practicing mindfulness",
+        70: "Building resilience",
+        80: "Understanding mental health",
+        90: "Seeking help when needed",
+        100: "Supporting others emotionally",
+    },
+    "Communication Skills": {
+        10: "Speaking in front of a class",
+        20: "Writing formal emails",
+        30: "Engaging in debates",
+        40: "Listening actively",
+        50: "Giving presentations",
+        60: "Interpreting non-verbal cues",
+        70: "Expressing opinions clearly",
+        80: "Participating in discussions",
+        90: "Negotiating effectively",
+        100: "Public speaking",
+    },
+    "Creativity": {
+        10: "Drawing and painting",
+        20: "Writing stories",
+        30: "Performing arts (theater, music)",
+        40: "Inventing solutions",
+        50: "Designing projects",
+        60: "Collaborating on creative tasks",
+        70: "Thinking outside the box",
+        80: "Developing unique ideas",
+        90: "Creating portfolios",
+        100: "Showcasing talents",
+    },
+    "Life Skills": {
+        10: "Managing time",
+        20: "Organizing tasks",
+        30: "Taking responsibility",
+        40: "Budgeting money",
+        50: "Cooking simple meals",
+        60: "Practicing self-care",
+        70: "Handling chores",
+        80: "Developing independence",
+        90: "Setting goals",
+        100: "Preparing for adulthood",
+    },
+    "Physical Development": {
+        10: "Participating in sports",
+        20: "Practicing coordination",
+        30: "Improving endurance",
+        40: "Building strength",
+        50: "Enhancing flexibility",
+        60: "Maintaining fitness",
+        70: "Engaging in physical activities",
+        80: "Developing motor skills",
+        90: "Promoting overall health",
+        100: "Achieving physical goals",
+    },
+    "Interpersonal Relationships": {
+        10: "Making friends",
+        20: "Building trust",
+        30: "Understanding boundaries",
+        40: "Practicing respect",
+        50: "Showing kindness",
+        60: "Navigating peer pressure",
+        70: "Communicating effectively",
+        80: "Developing deep connections",
+        90: "Handling conflicts",
+        100: "Maintaining healthy relationships",
+    },
+    "Personal Identity": {
+        10: "Exploring interests",
+        20: "Understanding values",
+        30: "Building self-awareness",
+        40: "Reflecting on beliefs",
+        50: "Developing ethics",
+        60: "Expressing individuality",
+        70: "Setting personal goals",
+        80: "Growing self-confidence",
+        90: "Practicing self-reflection",
+        100: "Embracing uniqueness",
+    },
+    "Career and Future Planning": {
+        10: "Exploring career interests",
+        20: "Setting academic goals",
+        30: "Planning for higher education",
+        40: "Participating in internships",
+        50: "Building a resume",
+        60: "Practicing job interviews",
+        70: "Researching vocational training",
+        80: "Developing job skills",
+        90: "Networking with professionals",
+        100: "Preparing for the future",
+    }
+}
